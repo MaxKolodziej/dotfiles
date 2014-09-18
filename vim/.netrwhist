@@ -1,0 +1,11 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/Users/max/workspace/housetrip-web-app-updated/spec/controllers/api/internal/v1'
+let g:netrw_dirhist_2='/Users/max/workspace/housetrip-web-app-updated/app/controllers/api/internal/v1/properties'
+let g:netrw_dirhist_3='/Users/max/workspace/housetrip-web-app-updated/app/controllers/api/internal/v1'
+let g:netrw_dirhist_4='/Users/max/workspace/housetrip-web-app-updated/app/presenters/internal_api'
+let g:netrw_dirhist_5='/Users/max/workspace/housetrip-web-app-updated/app/services/users'
+let g:netrw_dirhist_6='/Users/max/workspace/housetrip-web-app-updated/app/services/push_notification/guest_app'
+let g:netrw_dirhist_7='/Users/max/workspace/housetrip-web-app-updated/app/services/push_notification'
+let g:netrw_dirhist_8='/Users/max/workspace/housetrip-web-app-updated/app/services/push_notification/host_app'
+let g:netrw_dirhist_9='/Users/max/dotfiles/vim'

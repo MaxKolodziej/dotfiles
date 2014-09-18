@@ -1,0 +1,309 @@
+#!/usr/bin/env zsh
+
+alias be="bundle exec"
+alias bi="bundle install"
+alias rake='bundle exec rake'
+
+alias mkdir='mkdir -p'
+alias ls='ls -lah'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias gut='git'
+alias gc="git commit"
+alias gf="git fetch"
+alias gb="git branch"
+alias gd="git diff"
+alias ga="git add"
+alias gg="git grep -i"
+alias gA="git add -A"
+alias gpb="git pivotal-branch"
+alias gpr="git pull-request"
+alias gm="git merge"
+alias gsh="git push"
+alias gll="git pull"
+alias gca="git commit --amend"
+alias got="git checkout --theirs ."
+alias goo="git checkout --ours ."
+alias stash="git stash -u"
+alias grm="git rebase master"
+alias grc="git rebase --continue"
+alias grs="git rebase --skip"
+alias gcp="git cherry-pick"
+alias gcpc="git cherry-pick --continue"
+alias gml="git merge -"
+alias gom="git checkout master"
+alias gdm="git diff --name-only master"
+alias gsl="git stash list"
+function gsa { git stash apply stash@{$1} }
+function gr { grep "$@" }
+function gl { git log --oneline }
+function go { git checkout "$@"; update_current_git_vars }
+function grh { git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD); update_current_git_vars }
+function gol { git checkout -; update_current_git_vars }
+function gf { git fetch }
+function ltp { tail -n 200 -f log/test.log | grep 'Processing\|Parameters' }
+
+alias mongo="mongod --dbpath=/Users/max/workspace/mongodb"
+alias es="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
+alias tun="sudo tunnels 127.0.0.1:443 127.0.0.1:80"
+alias rab="rabbitmq-server"
+alias fore="foreman start"
+alias ttr="touch tmp/restart.txt"
+
+alias unstash="git stash pop"
+alias cuc='bundle exec cucumber'
+
+alias nginx_logs=/usr/local/Cellar/nginx/1.4.4/logs
+
+alias pb2haml='pbpaste | html2haml | pbcopy'
+
+function rmd {
+  rake db:migrate:down VERSION=$1
+}
+
+function rmu {
+  rake db:migrate:up VERSION=$1
+}
+
+function gpu {
+  echo "You're going to execute: git push -u origin $(git rev-parse --abbrev-ref HEAD)"
+  sleep 1
+  git push -u origin $(git rev-parse --abbrev-ref HEAD)
+}
+
+function vg {
+  i=1
+  while read -r line
+  do
+    echo "$i $line"
+    ((i++))
+  done
+
+  echo "Which file?"
+  read user_command
+
+  $file = $@ | awk "NR==$user_command"
+  echo $file
+  osascript ~/dotfiles/execute_in_macvim.applescript ":tab drop $file"
+}
+
+# run last command
+function k {
+  command=$(history | grep -v " k$" | tail -1 | awk '{print $2,$3,$4,$5}')
+  echo "executing: $command"
+  eval $command
+}
+
+function cb {
+  branch_name=$(ruby ~/dotfiles/create_name_for_branch.rb $1 $2)
+  echo $branch_name
+  echo $branch_name | tr -d "\n" | pbcopy
+}
+
+function cl {
+  python ~/dotfiles/copy_line.py
+}
+
+function cf {
+  python ~/dotfiles/copy_line.py
+  echo $# | cut -d ':' -f1 | pbcopy
+}
+
+function rts {
+  bundle exec rake routes | grep -i "$1"
+}
+
+function gg {
+  git grep -i -n $@
+}
+
+function spp {
+  source ~/.public_profile
+}
+
+function vg {
+  if [[ -z $1 ]]
+  then
+    command=$(history | grep -v " k$" | tail -1 | awk '{print $2,$3,$4,$5}')
+    result=$(eval "$command")
+  else
+    result=$(git grep -i -n "$@" | tail -n 30)
+  fi
+
+  echo $result | cat -n
+  echo 'File: '
+  read user_command
+
+  action=$(echo $user_command | cut -c1)
+
+  if [[ $action == 'c' ]]
+  then
+    user_command=$(echo $user_command | cut -c2-)
+  else
+    action='e'
+  fi
+
+  line=$(echo $result | awk "NR==$user_command" |  cut -d ':' -f1-2 | tr -d " \n")
+
+  file=$(echo $line | cut -d ':' -f1)
+  line_number=$(echo $line | cut -d ':' -f2)
+
+  echo $file | pbcopy
+  if [[ $action == 'e' ]]
+  then
+    osascript ~/dotfiles/execute_in_macvim.applescript ":tab drop $file"
+
+    osascript ~/dotfiles/execute_in_macvim.applescript ":$line_number"
+  fi
+}
+
+function gs {
+  git status --porcelain
+  update_current_git_vars #for zsh git prompt
+}
+
+function gst {
+  git status --porcelain | cat -n
+  echo 'File: '
+  read user_command
+  action=$(echo $user_command | cut -c1)
+
+  if [[ $action == 'c' ]]
+  then
+    user_command=$(echo $user_command | cut -c2-)
+  elif [[ $action == 'd' ]]
+  then
+    user_command=$(echo $user_command | cut -c2-)
+  else
+    action='e'
+    #user command stays the same
+  fi
+
+  file=$(git status --porcelain | awk "NR==$user_command" | sed 's/ *$//' | sed 's/^ *//' | cut -d ' ' -f2 | tr -d "# \n\t\r")
+  echo $file
+  echo $file | pbcopy
+  if [[ $action == 'e' ]]
+  then
+    osascript ~/dotfiles/execute_in_macvim.applescript ":tab drop $file"
+  elif [[ $action == 'd' ]]
+  then
+    git diff $file
+  fi
+}
+
+function gd {
+  git diff $1
+}
+
+function kill1 {
+  pid=$(ps aux | grep -i "$1" | grep -v 'grep' | awk '{print $2}' | sort | awk 'NR==1')
+  echo "Trying to kill $pid"
+  kill -9 $pid
+}
+
+function rt {
+  if [[ $1 =~ ".*\.feature" ]]
+  then
+    be cucumber $1
+  else
+    if [[ $(pwd) == '/Users/max/workspace/housetrip-web-app-updated' ]]
+    then
+      be spec $1
+    else
+      be rspec $1
+    fi
+  fi
+}
+
+function gor {
+  if [[ $1 =~ ".+" ]]
+  then
+    branches=$(gbr | grep $1 -c)
+    if [[ $branches == 0 ]]
+    then
+      echo "No branches found"
+    elif [[ $branches > 1 ]]
+    then
+      echo "Choose more specific branch"
+      gbr | grep $1
+    else
+      branch=$(gbr | grep $1 | awk '{print $1}')
+      git checkout $branch
+    fi
+  fi
+}
+
+function gbs {
+  git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)'
+}
+
+function gon {
+  gbs | nl
+  echo 'Which branch: '
+  read branch_number
+  branch_name=$(gbs | awk "NR==$branch_number" | tr -d ' ')
+  git checkout $branch_name
+  update_current_git_vars # remove if not using zsh-git-prompt
+}
+
+function cn {
+ curl $1 | cat -n | awk 'NR == n - 1 || NR == n || NR == n + 1' n=$2
+}
+#stty intr \^k
+
+GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWCOLORHINTS="yes"
+
+export PROMPT_COMMAND='__git_ps1 "\u@\h:\W" "\\\$ ";'
+
+export EDITOR=vim
+
+rc () {
+  if [ -f ./script/rails ]; then
+    bundle exec rails c $@
+  else
+    ./script/console $@
+  fi
+}
+
+rg () {
+  if [ -f ./script/rails ]; then
+    bundle exec rails g $@
+  else
+    ./script/generate $@
+  fi
+}
+
+rs () {
+  if [ -f ./script/rails ]; then
+    bundle exec rails s $@
+  elif [ -f ./Procfile ]; then
+    bundle exec foreman start $@
+  else
+    bundle exec thin start $@
+  fi
+}
+
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)        tar xjf $1        ;;
+            *.tar.gz)         tar xzf $1        ;;
+            *.bz2)            bunzip2 $1        ;;
+            *.rar)            unrar x $1        ;;
+            *.gz)             gunzip $1         ;;
+            *.tar)            tar xf $1         ;;
+            *.tbz2)           tar xjf $1        ;;
+            *.tgz)            tar xzf $1        ;;
+            *.zip)            unzip $1          ;;
+            *.Z)              uncompress $1     ;;
+            *)                echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+export PATH=$PATH:~/android/android-sdk/sdk/tools

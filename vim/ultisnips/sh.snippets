@@ -1,0 +1,23 @@
+priority -50
+
+extends sh
+
+priority -49
+
+snippet ife "if ... then ... else (ife)"
+if ${2:[[ ${1:condition} ]]}; then
+	${0:#statements}
+else
+	${3:#statements}
+fi
+endsnippet
+
+snippet ifee "if .. then .. elif .. else (ifee)"
+if ${2:[[ ${1:condition} ]]}; then
+	${0:#statements}
+elif ${5:[[ ${4:condition} ]]}; then
+	${3:#statements}
+else
+	${6:#statements}
+fi
+endsnippet
