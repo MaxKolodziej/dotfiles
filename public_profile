@@ -35,14 +35,41 @@ alias gml="git merge -"
 alias gom="git checkout master"
 alias gdm="git diff --name-only master"
 alias gsl="git stash list"
-function gsa { git stash apply stash@{$1} }
-function gr { grep "$@" }
-function gl { git log --oneline }
-function go { git checkout "$@"; update_current_git_vars }
-function grh { git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD); update_current_git_vars }
-function gol { git checkout -; update_current_git_vars }
-function gf { git fetch }
-function ltp { tail -n 200 -f log/test.log | grep 'Processing\|Parameters' }
+alias srspec="for i in $(find . -name '*_spec.rb'); do rspec $i; done"
+alias rcop="rubocop"
+alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
+alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
+
+alias phll="rake phraseapp:pull"
+alias phsh="rake phraseapp:push"
+
+function gsa {
+  git stash apply stash@{$1}
+}
+function gr {
+  grep "$@"
+}
+function gl {
+  git log --oneline
+}
+function go {
+  git checkout "$@"; update_current_git_vars
+}
+function grh {
+  git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD); update_current_git_vars
+}
+function gol {
+  git checkout -; update_current_git_vars
+}
+function gf {
+  git fetch
+}
+function ltp {
+  tail -n 200 -f log/test.log | grep 'Processing\|Parameters'
+}
+function psg {
+  ps aux | grep -i $1
+}
 
 alias mongo="mongod --dbpath=/Users/max/workspace/mongodb"
 alias es="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
@@ -57,6 +84,8 @@ alias cuc='bundle exec cucumber'
 alias nginx_logs=/usr/local/Cellar/nginx/1.4.4/logs
 
 alias pb2haml='pbpaste | html2haml | pbcopy'
+
+alias esdc='docker exec -it $(docker-compose ps -q elasticsearch) /bin/bash'
 
 function rmd {
   rake db:migrate:down VERSION=$1
@@ -136,7 +165,7 @@ function vg {
   echo $file | pbcopy
   if [[ $action == 'e' ]]
   then
-    osascript ~/dotfiles/execute_in_macvim.applescript ":tab drop $file"
+    osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
 
     osascript ~/dotfiles/execute_in_macvim.applescript ":$line_number"
   fi
@@ -153,7 +182,7 @@ function gso {
 
   file=$(echo $result | awk "NR==$1" | awk '{print $3}')
 
-  osascript ~/dotfiles/execute_in_macvim.applescript ":tab drop $file"
+  osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
 }
 
 function gst {
@@ -178,7 +207,7 @@ function gst {
   echo $file | pbcopy
   if [[ $action == 'e' ]]
   then
-    osascript ~/dotfiles/execute_in_macvim.applescript ":tab drop $file"
+    osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
   elif [[ $action == 'd' ]]
   then
     git diff $file
@@ -200,11 +229,7 @@ function rt {
   then
     be cucumber $1
   else
-    if [ -f ./script/rails ]; then
-      be rspec $1
-    else
-      be spec $1
-    fi
+    be rspec $1
   fi
 }
 
@@ -244,37 +269,23 @@ function cn {
 }
 #stty intr \^k
 
-GIT_PS1_SHOWUPSTREAM="auto"
-GIT_PS1_SHOWCOLORHINTS="yes"
-
-export PROMPT_COMMAND='__git_ps1 "\u@\h:\W" "\\\$ ";'
-
+#GIT_PS1_SHOWUPSTREAM="auto"
+#GIT_PS1_SHOWCOLORHINTS="yes"
+#
+#export PROMPT_COMMAND='__git_ps1 "\u@\h:\W" "\\\$ ";'
+#
 export EDITOR=vim
 
 rc () {
-  if [ -f ./script/rails ]; then
-    bundle exec rails c $@
-  else
-    ./script/console $@
-  fi
+  bundle exec rails c $@
 }
 
 rg () {
-  if [ -f ./script/rails ]; then
-    bundle exec rails g $@
-  else
-    ./script/generate $@
-  fi
+  bundle exec rails g $@
 }
 
 rs () {
-  if [ -f ./script/rails ]; then
-    bundle exec rails s $@
-  elif [ -f ./Procfile ]; then
-    bundle exec foreman start $@
-  else
-    bundle exec thin start $@
-  fi
+  bundle exec rails s $@
 }
 
 extract () {
@@ -298,3 +309,8 @@ extract () {
 }
 
 export PATH=$PATH:~/android/android-sdk/sdk/tools
+
+export RBENV_ROOT="$HOME/.rbenv"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+export DOCKER_IP=$(boot2docker ip)

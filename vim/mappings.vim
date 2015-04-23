@@ -53,9 +53,9 @@ nnoremap gf <C-w>gf
 map te :Texplore<CR>
 map tw :bd<CR>
 map tb :tabo<CR>
-map tn :tab drop<Space>
-map th :tab drop %:p:h/
-map tp :tab drop <C-r>+<CR>
+map tn :tab new<Space>
+map th :tab new %:p:h/
+map tp :tab new <C-r>+<CR>
 
 if has("cscope")
   set csprg=/usr/local/bin/cscope
@@ -112,14 +112,14 @@ sunmap e
 let g:ctrlp_map = '<c-i>'
 "
 "
-command! -nargs=? -complete=file E tab drop <args>
-command! -nargs=? -complete=file EC tab drop %:p:h/<args>
+command! -nargs=? -complete=file E tab new <args>
+command! -nargs=? -complete=file EC tab new %:p:h/<args>
 command! -nargs=1 Term let g:vim_terminal=<args>
 command! Mappings E ~/dotfiles/vim/mappings.vim
 command! Keys E ~/dotfiles/vim/mappings.vim
 command! Settings E ~/dotfiles/vim/settings.vim
 command! Vundle E ~/dotfiles/vim/vundle.vim
-command! Scripts tab drop ~/scripts.txt <bar> set ft=txtfmt
+command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
 
 command! -nargs=1 RunCommandInTerminal call RunCommandInTerminal("vg " . <args>)
 map ma yiw:RunCommandInTerminal('<C-r>"')<CR>
@@ -152,5 +152,6 @@ map ms :call CscopeFind('t', expand('<cword>'))<CR>
 
 nnoremap ca :let @+=expand("%:p")<CR>
 nnoremap cp :let @+=expand("%")<cr>
+nnoremap cl :let @+=expand("%:p") . ':' . line('.')<CR>
 
 

@@ -40,7 +40,7 @@ set ttyfast
 let g:ruby_path="~/.rvm/bin/ruby"
 
 set nu
-set regexpengine=1
+"set regexpengine=1
 
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 let g:ctrlp_use_caching = 0
@@ -83,3 +83,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 "let g:airline_section_b = ''
 filetype plugin indent on
 syntax enable
+
+let g:syntastic_ruby_checkers          = ['rubocop', 'mri']
+let g:syntastic_ruby_rubocop_exec      = '~/.rbenv/shims/rubocop'
+let g:syntastic_coffee_coffeelint_args = "-f .coffeelint.json"

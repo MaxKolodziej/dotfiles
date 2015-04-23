@@ -1,5 +1,4 @@
  let g:airline_powerline_fonts=1
- set guifont=Liberation\ Mono\ for\ Powerline
 
  set laststatus=2
 
