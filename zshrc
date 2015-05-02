@@ -10,10 +10,11 @@ source ~/.public_profile
 # define the plugins
 source ~/antigen/antigen.zsh
 antigen-bundle olivierverdier/zsh-git-prompt
-#antigen-bundle zsh-users/zsh-syntax-highlighting
+antigen-bundle zsh-users/zsh-syntax-highlighting
 antigen-bundle zsh-users/zsh-completions
 antigen-bundle Peeja/ctrl-zsh
 antigen-bundle pjg/zsh-vim-plugin
+antigen-bundle zsh-users/zsh-history-substring-search
 
 # load the plugins
 antigen-apply
@@ -24,6 +25,12 @@ antigen-apply
 autoload -U colors
 colors
 
+SAVEHIST=200
+HISTFILE=~/.zsh_history
+
+zmodload zsh/terminfo
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
 
 vim_ins_mode="%{$fg[cyan]%}[INS]%{$reset_color%}"
 vim_cmd_mode="%{$fg[green]%}[CMD]%{$reset_color%}"

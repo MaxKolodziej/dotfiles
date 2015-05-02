@@ -24,8 +24,10 @@
  Bundle 'vim-scripts/YankRing.vim'
  Bundle 'tpope/vim-eunuch'
  Bundle 'bkad/CamelCaseMotion'
- Bundle 'Shougo/neocomplcache.vim'
+ "Bundle 'Shougo/neocomplcache.vim'
  Bundle 'slim-template/vim-slim'
+ Bundle 'szw/vim-ctrlspace'
+ Bundle 'Valloric/YouCompleteMe'
 
  Bundle "xolox/vim-misc"
  " Bundle "xolox/vim-notes"

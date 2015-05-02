@@ -35,13 +35,16 @@ alias gml="git merge -"
 alias gom="git checkout master"
 alias gdm="git diff --name-only master"
 alias gsl="git stash list"
-alias srspec="for i in $(find . -name '*_spec.rb'); do rspec $i; done"
 alias rcop="rubocop"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
 
 alias phll="rake phraseapp:pull"
 alias phsh="rake phraseapp:push"
+
+function srspec {
+  for i in $(find . -name '*_spec.rb'); do rspec $i; done
+}
 
 function gsa {
   git stash apply stash@{$1}

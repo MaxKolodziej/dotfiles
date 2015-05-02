@@ -76,14 +76,24 @@ autocmd InsertEnter * syn clear EOLWS | syn match EOLWS excludenl /\s\+\%#\@!$/
 autocmd InsertLeave * syn clear EOLWS | syn match EOLWS excludenl /\s\+$/
 highlight EOLWS ctermbg=red guibg=red
 
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsListSnippets="<c-g>"
+
+let g:ycm_complete_in_comments = 1 
+let g:ycm_seed_identifiers_with_syntax = 1 
+let g:ycm_collect_identifiers_from_comments_and_strings = 1 
 
 "let g:airline_section_b = ''
 filetype plugin indent on
 syntax enable
 
 let g:syntastic_ruby_checkers          = ['rubocop', 'mri']
-let g:syntastic_ruby_rubocop_exec      = '~/.rbenv/shims/rubocop'
+let g:syntastic_ruby_rubocop_exec      = '~/.rbenv/versions/2.1.6/bin/rubocop'
 let g:syntastic_coffee_coffeelint_args = "-f .coffeelint.json"
+
+set spell spelllang=en_us
+
+"let g:ctrlspace_set_default_mapping=0
+"let g:ctrlspace_default_mapping_key="<C-b>"
