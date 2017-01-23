@@ -15,12 +15,14 @@ alias gc="git commit"
 alias gf="git fetch"
 alias gb="git branch"
 alias gd="git diff"
+alias gdc="git diff --cached"
 alias ga="git add"
 alias gA="git add -A"
 alias gpb="git pivotal-branch"
 alias gpr="git pull-request"
 alias gm="git merge"
-alias gsh="git push"
+alias gsh="git push --follow-tags"
+alias gtags='git for-each-ref --sort="-*authordate" --format="%(tag) - %(taggerdate:short)%0a%(contents)" refs/tags | less'
 alias gll="git pull"
 alias gca="git commit --amend"
 alias got="git checkout --theirs ."
@@ -35,9 +37,13 @@ alias gml="git merge -"
 alias gom="git checkout master"
 alias gdm="git diff --name-only master"
 alias gsl="git stash list"
-alias rcop="rubocop"
+alias rcop="bundle exec rubocop . -DR"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
+alias jfc="RAILS_ENV=test rake javascript_fixtures:create"
+alias rds="rake db:seed"
+alias meteo="curl -4 wttr.in/Cracow"
+alias merged="git log --grep=Merge"
 
 alias phll="rake phraseapp:pull"
 alias phsh="rake phraseapp:push"
@@ -50,7 +56,7 @@ function gsa {
   git stash apply stash@{$1}
 }
 function gr {
-  grep "$@"
+  grep -i "$@"
 }
 function gl {
   git log --oneline
@@ -74,6 +80,10 @@ function psg {
   ps aux | grep -i $1
 }
 
+function ff {
+  find . -name $1
+}
+
 alias mongo="mongod --dbpath=/Users/max/workspace/mongodb"
 alias es="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
 alias tun="sudo tunnels 127.0.0.1:443 127.0.0.1:80"
@@ -88,7 +98,10 @@ alias nginx_logs=/usr/local/Cellar/nginx/1.4.4/logs
 
 alias pb2haml='pbpaste | html2haml | pbcopy'
 
-alias esdc='docker exec -it $(docker-compose ps -q elasticsearch) /bin/bash'
+alias docker_es='docker exec -it $(docker-compose ps -q elasticsearch) /bin/bash'
+alias docker_worker='docker exec -it $(docker-compose ps -q worker) /bin/bash'
+alias docker_rabbit='docker exec -it $(docker-compose ps -q rabbitmq) /bin/bash'
+alias docker_redis='docker exec -it $(docker-compose ps -q redis) /bin/bash'
 
 function rmd {
   rake db:migrate:down VERSION=$1
@@ -136,6 +149,19 @@ function gg {
 
 function spp {
   source ~/.public_profile
+}
+
+function cg {
+  command=$(history | grep " gg " | tail -1 | awk '{print $2,$3,$4,$5}')
+  result=$(eval "$command")
+  if [[ -z $1 ]]
+  then
+    echo 'Put line number'
+  else
+    line=$(echo $result | awk "NR==$user_command" | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
+    echo $line
+    echo $line | pbcopy
+  fi
 }
 
 function vg {
@@ -188,6 +214,10 @@ function gso {
   osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
 }
 
+function replace_all {
+  find . -name $1  | xargs grep -isl $2 | xargs sed -i -e "s/$2/$3/g"
+}
+
 function gst {
   git status --porcelain | cat -n
   echo 'File: '
@@ -228,11 +258,14 @@ function kill1 {
 }
 
 function rt {
-  if [[ $1 =~ ".*\.feature" ]]
+  if [[ $1 =~ ".*\.feature.*" ]]
   then
     be cucumber $1
+  elif [[ $1 =~ "_test.rb.*" ]]
+  then
+    SKIP_COVERAGE=true RAILS_ENV=test bundle exec rake test $1
   else
-    be rspec $1
+    SKIP_COVERAGE=true RAILS_ENV=test be rspec $1
   fi
 }
 
@@ -255,11 +288,11 @@ function gor {
 }
 
 function gbs {
-  git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)'
+  git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 25
 }
 
 function gon {
-  gbs | nl
+  gbs | head -n 15 | nl
   echo 'Which branch: '
   read branch_number
   branch_name=$(gbs | awk "NR==$branch_number" | tr -d ' ')
@@ -316,4 +349,5 @@ export PATH=$PATH:~/android/android-sdk/sdk/tools
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
-export DOCKER_IP=$(boot2docker ip)
+eval "$(docker-machine env default)"
+export DOCKER_IP=$(docker-machine ip default)
