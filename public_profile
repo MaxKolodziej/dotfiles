@@ -41,12 +41,15 @@ alias rcop="bundle exec rubocop . -DR"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
 alias jfc="RAILS_ENV=test rake javascript_fixtures:create"
-alias rds="rake db:seed"
+alias seed="bundle exec rake db:seed"
 alias meteo="curl -4 wttr.in/Cracow"
 alias merged="git log --grep=Merge"
 
+alias fix_bundler="rm .bundle/config"
+
 alias phll="rake phraseapp:pull"
 alias phsh="rake phraseapp:push"
+alias decaf="decaffeinate --allow-invalid-constructors"
 
 function srspec {
   for i in $(find . -name '*_spec.rb'); do rspec $i; done
@@ -158,9 +161,10 @@ function cg {
   then
     echo 'Put line number'
   else
-    line=$(echo $result | awk "NR==$user_command" | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
-    echo $line
-    echo $line | pbcopy
+    line=$(echo $result | awk "NR==$1" | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
+    echo $line | tr -d '\n'
+    echo ""
+    echo $line | tr -d '\n' | pbcopy
   fi
 }
 
@@ -205,6 +209,20 @@ function gs {
   update_current_git_vars #for zsh git prompt
 }
 
+function cs {
+  command=$(history | grep " gs$" | tail -1 | awk '{print $2,$3,$4,$5}')
+  result=$(eval "$command")
+  if [[ -z $1 ]]
+  then
+    echo 'Put line number'
+  else
+    line=$(echo $result | awk "NR==$1" | awk '{print $3}' | tr -d " \r\n\t")
+    echo $line | tr -d '\n'
+    echo ""
+    echo $line | tr -d '\n' | pbcopy
+  fi
+}
+
 function gso {
   command=$(history | grep "gs$" | tail -1 | awk '{print $2,$3,$4,$5}')
   result=$(eval "$command")
@@ -215,7 +233,7 @@ function gso {
 }
 
 function replace_all {
-  find . -name $1  | xargs grep -isl $2 | xargs sed -i -e "s/$2/$3/g"
+  find . -name $1  | xargs grep -isl $2 | xargs sed -i -E -e "s/$2/$3/g"
 }
 
 function gst {
@@ -345,6 +363,9 @@ extract () {
 }
 
 export PATH=$PATH:~/android/android-sdk/sdk/tools
+MYSQL=/usr/local/mysql/bin
+export PATH=$PATH:$MYSQL
+export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
