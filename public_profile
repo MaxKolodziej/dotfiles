@@ -2,7 +2,7 @@
 
 alias be="bundle exec"
 alias bi="bundle install"
-alias rake='bundle exec rake'
+alias rk='RAILS_ENV=test bundle exec rake'
 
 alias mkdir='mkdir -p'
 alias ls='ls -lah'
@@ -40,16 +40,19 @@ alias gsl="git stash list"
 alias rcop="bundle exec rubocop . -DR"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
-alias jfc="RAILS_ENV=test rake javascript_fixtures:create"
+alias jfc="RAILS_ENV=test SKIP_COVERAGE=true rake javascript_fixtures:create"
 alias seed="bundle exec rake db:seed"
 alias meteo="curl -4 wttr.in/Cracow"
 alias merged="git log --grep=Merge"
 
-alias fix_bundler="rm .bundle/config"
+alias fix_bundler="rm .bundle/config; bundle install --system"
 
 alias phll="rake phraseapp:pull"
 alias phsh="rake phraseapp:push"
 alias decaf="decaffeinate --allow-invalid-constructors"
+alias ecop='node_modules/.bin/eslint app/assets/javascripts --ext .es6'
+alias retest="@github-script retest this please!"
+alias play="osascript ~/.vim/play_song_in_itunes.applescript play"
 
 function srspec {
   for i in $(find . -name '*_spec.rb'); do rspec $i; done
@@ -66,6 +69,9 @@ function gl {
 }
 function go {
   git checkout "$@"; update_current_git_vars
+}
+function gor {
+  git checkout -t $(git branch -r | grep -i "$@" | tail -1); update_current_git_vars
 }
 function grh {
   git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD); update_current_git_vars
@@ -112,6 +118,10 @@ function rmd {
 
 function rmu {
   rake db:migrate:up VERSION=$1
+}
+
+function rdr {
+  RAILS_ENV=test rake db:drop db:create db:migrate
 }
 
 function gpu {
@@ -342,6 +352,11 @@ rs () {
   bundle exec rails s $@
 }
 
+alias ys="yarn run start"
+alias yt="yarn run check"
+alias yc="yarn cache clean"
+alias yi="yarn install"
+
 extract () {
     if [ -f $1 ] ; then
         case $1 in
@@ -369,6 +384,23 @@ export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+#
+#function push_to_source_file() {
+#  lines_with_pattern=`cat $SHELL_SOURCE_FILE | grep -i $1 | awk '{print $1}' | wc -l`
+#  echo $lines_with_pattern
+#
+#  if [[ $lines_with_pattern -le "1" ]]
+#  then
+#    echo $1 >> $SHELL_SOURCE_FILE
+#  else
+#    echo 'already configured'
+#  fi
+#}
 
-eval "$(docker-machine env default)"
-export DOCKER_IP=$(docker-machine ip default)
+#echo "Setup docker"
+#javascript_fixturespush_to_source_file 'test'
+alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD"
+
+alias fixdbtest="DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
+alias fixdbdev="DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
+alias vimup="let i=1 | g/,\d\+)/s//\=','.i.')'/ | let i=i+1"
