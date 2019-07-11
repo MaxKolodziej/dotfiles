@@ -27,7 +27,7 @@ else
 end
 let g:airline#extensions#whitespace#enabled = 0
 
-set guifont=Inconsolata\-dz\ for\ Powerline
+"set guifont=Inconsolata\-dz\ for\ Powerline
 let g:Powerline_symbols = 'fancy'
 
 "hi CursorColumn term=underline cterm=underline guibg=#F4F4F4 
@@ -90,7 +90,12 @@ filetype plugin indent on
 syntax enable
 
 let g:syntastic_ruby_checkers          = ['rubocop', 'mri']
-let g:syntastic_ruby_rubocop_exec      = '~/.rbenv/versions/2.1.6/bin/rubocop'
+let g:syntastic_check_on_open = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_debug = 0 " 33 3
+let g:syntastic_ruby_rubocop_exec      = '/Users/max/.rbenv/shims/rubocop'
+let g:syntastic_warning_symbol = 'WW'
+let g:syntastic_error_symbol = 'EE'
 let g:syntastic_coffee_coffeelint_args = "-f .coffeelint.json"
 
 set spell spelllang=en_us
