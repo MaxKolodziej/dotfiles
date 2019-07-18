@@ -40,10 +40,29 @@ alias gsl="git stash list"
 alias rcop="bundle exec rubocop . -DR"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
-alias jfc="RAILS_ENV=test SKIP_COVERAGE=true rake javascript_fixtures:create"
+alias jfc="RAILS_ENV=test SKIP_COVERAGE=true bundle exec rake javascript_fixtures:create"
 alias seed="bundle exec rake db:seed"
 alias meteo="curl -4 wttr.in/Cracow"
 alias merged="git log --grep=Merge"
+
+alias d_e="docker exec -it"
+alias d_p="docker ps"
+alias d_i="docker images"
+alias d_irm="docker rmi"
+alias d_c="docker container list -a"
+alias d_crm="docker container rm"
+alias d_cp="docker-compose ps"
+alias d_cd="docker-compose down"
+alias d_cu="docker-compose up -d"
+alias d_up="docker-compose -f docker-compose.max.yml up"
+alias d_stop="docker-compose -f docker-compose.max.yml stop"
+
+function dl {
+  alias | grep -i ^d_
+  declare -f | sed -n '/^d_/,/\}/p'
+}
+
+alias rem_lines="sed -e '2,6d'"
 
 alias fix_bundler="rm .bundle/config; bundle install --system"
 
@@ -130,6 +149,14 @@ function gpu {
   git push -u origin $(git rev-parse --abbrev-ref HEAD)
 }
 
+function res_spawner {
+  job_runs=$(ps aux | grep -i "delayed_job" | grep -v grep | wc -l)
+  if [[ $job_runs -eq 0 ]]
+  then
+    cd /virtual/app/current && RAILS_ENV=production bin/delayed_job restart
+  fi
+}
+
 # run last command
 function k {
   command=$(history | grep -v " k$" | tail -1 | awk '{print $2,$3,$4,$5}')
@@ -157,7 +184,7 @@ function rts {
 }
 
 function gg {
-  git grep -i -n $@ | cat -n
+  git grep -i -n $@ | cat -n | cut -c -180
 }
 
 function spp {
@@ -242,6 +269,7 @@ function gso {
   osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
 }
 
+# replace_all '*.sass' "\+transition-timing-function\((.*)\)$" "transition-timing-function: \1"
 function replace_all {
   find . -name $1  | xargs grep -isl $2 | xargs sed -i -E -e "s/$2/$3/g"
 }
@@ -285,17 +313,26 @@ function kill1 {
   kill -9 $pid
 }
 
+# brew install expect to install unbuffer
+# RAILS_ENV=test unbuffer bundle exec rspec $@ 2>&1 | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
 function rt {
-  if [[ $1 =~ ".*\.feature.*" ]]
-  then
-    be cucumber $1
-  elif [[ $1 =~ "_test.rb.*" ]]
-  then
-    SKIP_COVERAGE=true RAILS_ENV=test bundle exec rake test $1
-  else
-    SKIP_COVERAGE=true RAILS_ENV=test be rspec $1
-  fi
+  RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
 }
+
+function last_tests {
+  cat /tmp/last_tests.txt | grep -i rspec | awk -v fs="(spec |#)" '{print $2}'
+}
+
+function lt {
+  last_tests | cat -n
+  echo "which test: "
+  read test_no
+  test_file=$(last_tests | awk "NR==$test_no" | tr -d ' ')
+  echo "copied $test_file"
+  echo "$test_file" | tr -dc '[[:print:]]' | pbcopy
+}
+
+alias summer="bundle exec spring stop"
 
 function gor {
   if [[ $1 =~ ".+" ]]
@@ -352,10 +389,24 @@ rs () {
   bundle exec rails s $@
 }
 
-alias ys="yarn run start"
-alias yt="yarn run check"
+alias ych="yarn run check"
+
+ys () {
+  yarn run start $1
+}
+yt () {
+  yarn run test $@
+}
+
+alias ytr="yarn run fetch-translations"
 alias yc="yarn cache clean"
 alias yi="yarn install"
+alias yb="NODE_ENV=development yarn run build"
+alias yfix="curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6"
+function ns {
+  npm set coaches-app-client:hops:apiHost "http://localhost:3000"
+  npm run hot 
+}
 
 extract () {
     if [ -f $1 ] ; then
@@ -378,8 +429,7 @@ extract () {
 }
 
 export PATH=$PATH:~/android/android-sdk/sdk/tools
-MYSQL=/usr/local/mysql/bin
-export PATH=$PATH:$MYSQL
+export PATH=$PATH:/usr/local/mysql/bin
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
 export RBENV_ROOT="$HOME/.rbenv"
@@ -404,3 +454,5 @@ alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git 
 alias fixdbtest="DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
 alias fixdbdev="DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
 alias vimup="let i=1 | g/,\d\+)/s//\=','.i.')'/ | let i=i+1"
+alias scalafmt="sbt scalafmt"
+export PATH="$(brew --prefix qt)/bin:$PATH"

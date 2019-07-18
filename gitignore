@@ -24,6 +24,7 @@ jasmine/.ruby-version
 ncscope.out
 public/images/sprites/
 vim/.netrwhist
+/docker-compose.max.yml
 
 # Ignore doc dir
 .yardoc
@@ -37,3 +38,4 @@ nbproject/
 
 # Ingore code coverage reports
 coverage/
+.ctrlpignore

@@ -20,6 +20,7 @@
  Bundle 'tpope/vim-fugitive'
  Bundle 'tpope/vim-surround'
  Bundle 'tpope/vim-abolish'
+ Bundle 'kopischke/vim-fetch'
  Bundle 'Lokaltog/vim-easymotion'
  Bundle 'vim-scripts/YankRing.vim'
  Bundle 'tpope/vim-eunuch'

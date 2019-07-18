@@ -8,16 +8,16 @@ source ~/.private_profile
 source ~/.public_profile
 
 # define the plugins
-source ~/antigen/antigen.zsh
-antigen-bundle olivierverdier/zsh-git-prompt
-antigen-bundle zsh-users/zsh-syntax-highlighting
-antigen-bundle zsh-users/zsh-completions
-antigen-bundle Peeja/ctrl-zsh
-antigen-bundle pjg/zsh-vim-plugin
-antigen-bundle zsh-users/zsh-history-substring-search
+source ~/antigen.zsh
+antigen bundle olivierverdier/zsh-git-prompt
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-completions
+antigen bundle Peeja/ctrl-zsh
+antigen bundle pjg/zsh-vim-plugin
+antigen bundle zsh-users/zsh-history-substring-search
 
 # load the plugins
-antigen-apply
+antigen apply
 
 #
 #
@@ -67,5 +67,7 @@ setopt transient_rprompt
 
 bindkey -v
 
-toilet -f mono12 -F metal WELCOME
 update_current_git_vars
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+export PATH="/usr/local/opt/openssl/bin:$PATH"

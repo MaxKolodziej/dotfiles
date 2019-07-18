@@ -83,16 +83,7 @@ nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 nnoremap <leader>p yypip <esc>A<esc>
 nnoremap <leader>P yyPip <esc>A<esc>
-vnoremap <leader>p yop(<esc>pA)<esc>
-vnoremap <leader>P yoP(<esc>pA)<esc>
-
-nnoremap <leader>c yypiconsole.log(<esc>A);<esc>
-nnoremap <leader>C yyPiconsole.log(<esc>A);<esc>
-vnoremap <leader>c yoconsole.log(<esc>pA);<esc>
-vnoremap <leader>C yOconsole.log(<esc>pA);<esc>
-
-vnoremap <leader>d p "Called by #{caller(1).first rescue "unknown"}"
-vnoremap <leader>D P "Called by #{caller(1).first rescue "unknown"}"
+vnoremap <leader>p yoputs "================="<esc>oputs <esc>p$oputs "============="<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>
