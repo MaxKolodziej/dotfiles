@@ -54,7 +54,13 @@ alias d_crm="docker container rm"
 alias d_cp="docker-compose ps"
 alias d_cd="docker-compose down"
 alias d_cu="docker-compose up -d"
-alias d_up="docker-compose -f docker-compose.max.yml up"
+function d_up {
+  if [[ $@ != *"-d"* ]];then
+    echo "You forgot to deamonize?"
+    sleep 1
+  fi
+  docker-compose -f docker-compose.max.yml up $@
+}
 alias d_stop="docker-compose -f docker-compose.max.yml stop"
 
 function dl {
@@ -313,10 +319,10 @@ function kill1 {
   kill -9 $pid
 }
 
-# brew install expect to install unbuffer
-# RAILS_ENV=test unbuffer bundle exec rspec $@ 2>&1 | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
 function rt {
   RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
+  tests=$(last_tests)
+  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | pbcopy
 }
 
 function last_tests {

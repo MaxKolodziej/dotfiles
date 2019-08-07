@@ -44,7 +44,7 @@ set nu
 
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
 let g:ctrlp_use_caching = 0
-let g:ctrlp_user_command = 'find %s -type f | grep -v "`cat .ctrlpignore 2>/dev/null`\nNotExistingDirToHandleErrors"'
+let g:ctrlp_user_command = 'find %s -type f | grep -v "`cat .ctrlpignore`"'
 
 let g:notes_directories = ['~/Documents/notes']
 let g:notes_suffix = '.txt'
@@ -87,6 +87,7 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1 
 
 "let g:airline_section_b = ''
+
 filetype plugin indent on
 syntax enable
 

@@ -25,6 +25,8 @@ ncscope.out
 public/images/sprites/
 vim/.netrwhist
 /docker-compose.max.yml
+/docker-compose.backend.yml
+/docker-compose.efraud.yml
 
 # Ignore doc dir
 .yardoc

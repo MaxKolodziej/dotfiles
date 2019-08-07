@@ -81,9 +81,7 @@ nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
-nnoremap <leader>p yypip <esc>A<esc>
-nnoremap <leader>P yyPip <esc>A<esc>
-vnoremap <leader>p yoputs "================="<esc>oputs <esc>p$oputs "============="<esc>
+vnoremap <leader>p yOputs "================="<esc>oputs <esc>p$oputs "============="<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>
@@ -145,4 +143,8 @@ nnoremap ca :let @+=expand("%:p")<CR>
 nnoremap cp :let @+=expand("%")<cr>
 nnoremap cl :let @+=expand("%:p") . ':' . line('.')<CR>
 
+function IndentV()
+  Tabularize /\(\w\+\ze\s\+: \|: \)/l0l1
+endfunction
+map <Leader>iv :call IndentV()<cr>
 
