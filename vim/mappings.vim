@@ -81,7 +81,16 @@ nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
-vnoremap <leader>p yOputs "================="<esc>oputs <esc>p$oputs "============="<esc>
+map <F7> gg=G<C-o><C-o>
+vnoremap <C-k> "ky
+nmap <C-k> "kp
+vnoremap <leader>p yOputs "♥♥♥♥♥♥♥♥♥♥♥♥♥♥"<esc>oputs <esc>p$oputs "♥♥♥♥♥♥♥♥♥♥♥♥♥"<esc>
+noremap <leader>1 Oputs "♥♥♥♥♥♥♥♥ 1 ♥♥♥♥♥♥♥♥"<esc>
+noremap <leader>2 Oputs "♥♥♥♥♥♥♥♥ 2 ♥♥♥♥♥♥♥♥"<esc>
+noremap <leader>3 Oputs "♥♥♥♥♥♥♥♥ 3 ♥♥♥♥♥♥♥♥"<esc>
+noremap <leader>4 Oputs "♥♥♥♥♥♥♥♥ 4 ♥♥♥♥♥♥♥♥"<esc>
+noremap <leader>5 Oputs "♥♥♥♥♥♥♥♥ 5 ♥♥♥♥♥♥♥♥"<esc>
+noremap <leader>6 Oputs "♥♥♥♥♥♥♥♥ 6 ♥♥♥♥♥♥♥♥"<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>

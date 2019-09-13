@@ -102,5 +102,8 @@ let g:syntastic_coffee_coffeelint_args = "-f .coffeelint.json"
 
 set spell spelllang=en_us
 
+set shortmess=a
+set cmdheight=2
+let g:bufferline_echo=0
 "let g:ctrlspace_set_default_mapping=0
 "let g:ctrlspace_default_mapping_key="<C-b>"

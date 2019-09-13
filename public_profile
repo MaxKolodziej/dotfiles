@@ -2,7 +2,6 @@
 
 alias be="bundle exec"
 alias bi="bundle install"
-alias rk='RAILS_ENV=test bundle exec rake'
 
 alias mkdir='mkdir -p'
 alias ls='ls -lah'
@@ -338,7 +337,35 @@ function lt {
   echo "$test_file" | tr -dc '[[:print:]]' | pbcopy
 }
 
+function rk {
+  if [ -e /tmp/last_tests_rake.txt ]
+  then cp /tmp/last_tests_rake.txt /tmp/last_tests_rake.back.txt
+  fi
+  TESTS_STDOUT=0 RAILS_ENV=test bundle exec rake $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests_rake.txt)
+  tests=$(last_tests_rake)
+  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | pbcopy
+}
+
+function last_tests_rake {
+  cat /tmp/last_tests_rake.txt | grep -i rspec | awk -v fs="(spec |#)" '{print $2}'
+}
+
+function ltr {
+  last_tests_rake | cat -n
+  echo "which test: "
+  read test_no
+  test_file=$(last_tests_rake | awk "NR==$test_no" | tr -d ' ' | tr -dc '[[:print:]]')
+  echo "copied $test_file"
+  echo "$test_file" | pbcopy
+}
+
+alias gdstat="git diff --stat develop..HEAD"
+
 alias summer="bundle exec spring stop"
+
+function vdt {
+  git difftool -t vimdiff -y $@
+}
 
 function gor {
   if [[ $1 =~ ".+" ]]
@@ -369,6 +396,13 @@ function gon {
   branch_name=$(gbs | awk "NR==$branch_number" | tr -d ' ')
   git checkout $branch_name
   update_current_git_vars # remove if not using zsh-git-prompt
+}
+
+function rfix {
+  filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | tr '\n' ' ')
+  command="bundle exec rubocop -a $filenames"
+  echo $command
+  eval $command
 }
 
 function cn {
