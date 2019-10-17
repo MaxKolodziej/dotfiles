@@ -10,4 +10,4 @@
 
  source ~/.vim/rails_tests.vim
 
- source ~/.vim/play_song_in_itunes.vim
+" source ~/.vim/play_song_in_itunes.vim

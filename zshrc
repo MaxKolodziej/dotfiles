@@ -70,4 +70,3 @@ bindkey -v
 update_current_git_vars
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
-export PATH="/usr/local/opt/openssl/bin:$PATH"

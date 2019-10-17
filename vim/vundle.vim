@@ -34,6 +34,7 @@
  " Bundle "xolox/vim-notes"
  " Bundle 'vim-scripts/Txtfmt-The-Vim-Highlighter'
  " Bundle 'airblade/vim-gitgutter'
+ Bundle 'Tumbler/highlightMarks'
 
  Bundle 'kien/ctrlp.vim'
  Bundle 'pangloss/vim-javascript'

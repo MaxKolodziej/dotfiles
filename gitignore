@@ -30,7 +30,6 @@ vim/.netrwhist
 
 # Ignore doc dir
 .yardoc
-/doc
 
 # Foreman environment
 /.env
@@ -41,3 +40,4 @@ nbproject/
 # Ingore code coverage reports
 coverage/
 .ctrlpignore
+.byebug_history

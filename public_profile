@@ -144,8 +144,12 @@ function rmu {
   rake db:migrate:up VERSION=$1
 }
 
-function rdr {
-  RAILS_ENV=test rake db:drop db:create db:migrate
+function rdrt {
+  RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
+}
+
+function rdrd {
+  RAILS_ENV=development bundle exec rake db:drop db:create db:migrate
 }
 
 function gpu {
@@ -274,9 +278,16 @@ function gso {
   osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
 }
 
-# replace_all '*.sass' "\+transition-timing-function\((.*)\)$" "transition-timing-function: \1"
+# replace_all '*.sass' . "\+transition-timing-function\((.*)\)$" "transition-timing-function: \1"
+# replace_all '*.rb' . '{:order =>\(.*\)}' '-> { order(\1) }'
 function replace_all {
-  find . -name $1  | xargs grep -isl $2 | xargs sed -i -E -e "s/$2/$3/g"
+  files=$(find $2 -name $1  | xargs grep -isl "$3")
+  echo "found files:"
+  echo $files
+  echo $files | xargs sed -i -E -e "s/$3/$4/g"
+}
+function undo_replace_all {
+  find . -name "*-E" | sed 's/-E//g' | while read line ; do cp "$line-E" "$line"; done
 }
 
 function gst {
@@ -319,7 +330,7 @@ function kill1 {
 }
 
 function rt {
-  RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
+  TESTS_STDOUT=1 RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
   tests=$(last_tests)
   echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | pbcopy
 }
@@ -405,6 +416,14 @@ function rfix {
   eval $command
 }
 
+function rlfix {
+  last_commit=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 1)
+  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | tr '\n' ' ')
+  command="bundle exec rubocop -a $filenames"
+  echo $command
+  eval $command
+}
+
 function cn {
  curl $1 | cat -n | awk 'NR == n - 1 || NR == n || NR == n + 1' n=$2
 }
@@ -443,9 +462,10 @@ alias yc="yarn cache clean"
 alias yi="yarn install"
 alias yb="NODE_ENV=development yarn run build"
 alias yfix="curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6"
-function ns {
-  npm set coaches-app-client:hops:apiHost "http://localhost:3000"
-  npm run hot 
+
+sshs() {
+        ssh $@ "cat > /tmp/.bashrc_temp" < ~/.bashrc_remote
+        ssh -t $@ "bash --rcfile /tmp/.bashrc_temp ; rm /tmp/.bashrc_temp"
 }
 
 extract () {
@@ -472,6 +492,9 @@ export PATH=$PATH:~/android/android-sdk/sdk/tools
 export PATH=$PATH:/usr/local/mysql/bin
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
+# fixssl="export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/"
+
+
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 #
@@ -491,8 +514,23 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 #javascript_fixturespush_to_source_file 'test'
 alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD"
 
-alias fixdbtest="DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
-alias fixdbdev="DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
+alias fixdbtest="RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
+alias fixdbdev="RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
 alias vimup="let i=1 | g/,\d\+)/s//\=','.i.')'/ | let i=i+1"
 alias scalafmt="sbt scalafmt"
 export PATH="$(brew --prefix qt)/bin:$PATH"
+
+# export LDFLAGS="-L/usr/local/opt/libxml2/lib"
+# export CPPFLAGS="-I/usr/local/opt/libxml2/include"
+# export LDFLAGS="-L/usr/local/opt/libiconv/lib"
+# export CPPFLAGS="-I/usr/local/opt/libiconv/include"
+# export LDFLAGS="-L/usr/local/opt/imagemagick@6/lib"
+# export CPPFLAGS="-I/usr/local/opt/imagemagick@6/include"
+export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+export PATH="/usr/local/opt/libiconv/bin:$PATH"
+export PATH="/usr/local/opt/openssl/bin:$PATH"
+export PATH="/usr/local/opt/libxml2/bin:$PATH"
+export PATH="/usr/local/opt/mariadb@10.0/bin:$PATH"
+#export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
+#export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"
+#  gem install nokogiri -v '1.4.4' --source 'https://rubygems.org/' -- --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2 --with-xml2-lib=/usr/local/opt/libxml2/lib

@@ -118,10 +118,11 @@ command! Keys E ~/dotfiles/vim/mappings.vim
 command! Settings E ~/dotfiles/vim/settings.vim
 command! Vundle E ~/dotfiles/vim/vundle.vim
 command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
+command! -nargs=0 Mr RemoveMarkHighlights
 
-command! -nargs=1 RunCommandInTerminal call RunCommandInTerminal("vg " . <args>)
-map ma yiw:RunCommandInTerminal('<C-r>"')<CR>
-vnoremap ma y:RunCommandInTerminal('<C-r>"')<CR>
+" command! -nargs=1 RunCommandInTerminal call RunCommandInTerminal("vg " . <args>)
+" map ma yiw:RunCommandInTerminal('<C-r>"')<CR>
+" vnoremap ma y:RunCommandInTerminal('<C-r>"')<CR>
 
 abbreviate Pj E public/javascripts
 abbreviate Aj E app/assets/javascripts
@@ -140,13 +141,11 @@ command! -nargs=0 Reload so $MYVIMRC
 command! -nargs=0 RefreshCode windo e!
 
 " Find this definition 
-map mm :call CscopeFind('g', expand('<cword>'))<CR> 
-
+" map mm :call CscopeFind('g', expand('<cword>'))<CR> 
 " Find all calls 
-map mc :call CscopeFind('c', expand('<cword>'))<CR> 
-
+" map mc :call CscopeFind('c', expand('<cword>'))<CR> 
 " Find this text string
-map ms :call CscopeFind('t', expand('<cword>'))<CR>
+" map ms :call CscopeFind('t', expand('<cword>'))<CR>
 
 nnoremap ca :let @+=expand("%:p")<CR>
 nnoremap cp :let @+=expand("%")<cr>

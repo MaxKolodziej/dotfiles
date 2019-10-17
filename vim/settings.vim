@@ -49,6 +49,9 @@ let g:ctrlp_user_command = 'find %s -type f | grep -v "`cat .ctrlpignore`"'
 let g:notes_directories = ['~/Documents/notes']
 let g:notes_suffix = '.txt'
 
+let g:highlightMarks_colors = ['#FFFF00', '#FFEE11', '#FFDD22', '#FFCC33', '#FFBB44', '#FFAA55', '#FF9966', '#FF8877']
+let g:highlightMarks_useSigns = 1
+
 set tags=tags;/
 "set rnu "working very slow :/
 "
