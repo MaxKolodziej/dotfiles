@@ -14,7 +14,6 @@
  " original repos on github
  "Bundle 'vim-scripts/lastpos.vim'
  Bundle 'bling/vim-airline'
- Bundle 'scrooloose/syntastic'
  Bundle 'scrooloose/nerdtree'
  Bundle 'tpope/vim-rails'
  Bundle 'tpope/vim-fugitive'
@@ -29,6 +28,9 @@
  Bundle 'slim-template/vim-slim'
  Bundle 'szw/vim-ctrlspace'
  Bundle 'Valloric/YouCompleteMe'
+ Bundle 'ludovicchabant/vim-gutentags'
+ Bundle 'kristijanhusak/vim-js-file-import'
+ Bundle 'dense-analysis/ale'
 
  Bundle "xolox/vim-misc"
  " Bundle "xolox/vim-notes"
@@ -37,7 +39,9 @@
  Bundle 'Tumbler/highlightMarks'
 
  Bundle 'kien/ctrlp.vim'
- Bundle 'pangloss/vim-javascript'
+ Bundle 'othree/yajs.vim'
+ Bundle 'mxw/vim-jsx'
+ 
  Bundle 'kchmck/vim-coffee-script'
 
  Bundle 'git@github.com:vim-scripts/cscope.vim.git'

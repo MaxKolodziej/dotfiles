@@ -200,7 +200,7 @@ function spp {
   source ~/.public_profile
 }
 
-function cg {
+function ggc {
   command=$(history | grep " gg " | tail -1 | awk '{print $2,$3,$4,$5}')
   result=$(eval "$command")
   if [[ -z $1 ]]
@@ -255,7 +255,7 @@ function gs {
   update_current_git_vars #for zsh git prompt
 }
 
-function cs {
+function gsc {
   command=$(history | grep " gs$" | tail -1 | awk '{print $2,$3,$4,$5}')
   result=$(eval "$command")
   if [[ -z $1 ]]
@@ -519,9 +519,15 @@ alias fixdbdev="RAILS_ENV=development bundle exec rake db:drop db:create db:migr
 alias vimup="let i=1 | g/,\d\+)/s//\=','.i.')'/ | let i=i+1"
 alias scalafmt="sbt scalafmt"
 export PATH="$(brew --prefix qt)/bin:$PATH"
+alias db_fix="RAILS_ENV=test rake db:drop:primary db:drop:secondary db:create:primary db:create:secondary db:migrate:primary db:migrate:secondary"
+alias fs="foreman start -f Procfile.dev"
+
+alias nt="npm test"
+alias ntu="npm test -- -u"
 
 # export LDFLAGS="-L/usr/local/opt/libxml2/lib"
 # export CPPFLAGS="-I/usr/local/opt/libxml2/include"
+# export CPPFLAGS="-I/usr/local/opt/libxml2/include/libxml2"
 # export LDFLAGS="-L/usr/local/opt/libiconv/lib"
 # export CPPFLAGS="-I/usr/local/opt/libiconv/include"
 # export LDFLAGS="-L/usr/local/opt/imagemagick@6/lib"
@@ -531,6 +537,7 @@ export PATH="/usr/local/opt/libiconv/bin:$PATH"
 export PATH="/usr/local/opt/openssl/bin:$PATH"
 export PATH="/usr/local/opt/libxml2/bin:$PATH"
 export PATH="/usr/local/opt/mariadb@10.0/bin:$PATH"
+export PATH="/usr/local/opt/berkeley-db@4/bin:$PATH"
 #export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
 #export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"
 #  gem install nokogiri -v '1.4.4' --source 'https://rubygems.org/' -- --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2 --with-xml2-lib=/usr/local/opt/libxml2/lib

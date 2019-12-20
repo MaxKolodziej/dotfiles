@@ -41,3 +41,8 @@ nbproject/
 coverage/
 .ctrlpignore
 .byebug_history
+notes.rb
+tags
+tags.lock
+tags.temp
+.eslintrc.json

@@ -84,13 +84,10 @@ nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 map <F7> gg=G<C-o><C-o>
 vnoremap <C-k> "ky
 nmap <C-k> "kp
-vnoremap <leader>p yOputs "♥♥♥♥♥♥♥♥♥♥♥♥♥♥"<esc>oputs <esc>p$oputs "♥♥♥♥♥♥♥♥♥♥♥♥♥"<esc>
-noremap <leader>1 Oputs "♥♥♥♥♥♥♥♥ 1 ♥♥♥♥♥♥♥♥"<esc>
-noremap <leader>2 Oputs "♥♥♥♥♥♥♥♥ 2 ♥♥♥♥♥♥♥♥"<esc>
-noremap <leader>3 Oputs "♥♥♥♥♥♥♥♥ 3 ♥♥♥♥♥♥♥♥"<esc>
-noremap <leader>4 Oputs "♥♥♥♥♥♥♥♥ 4 ♥♥♥♥♥♥♥♥"<esc>
-noremap <leader>5 Oputs "♥♥♥♥♥♥♥♥ 5 ♥♥♥♥♥♥♥♥"<esc>
-noremap <leader>6 Oputs "♥♥♥♥♥♥♥♥ 6 ♥♥♥♥♥♥♥♥"<esc>
+vnoremap <leader>p yOputs "========="<esc>oputs <esc>p$oputs "========="<esc>
+vnoremap <leader>c yOconsole.log("=========")<esc>oconsole.log(<esc>p$i)<esc>oconsole.log("=========")<esc>
+noremap <leader>1 Oputs "========= 1 ========="<esc>
+noremap <leader>2 Oconsole.log("======== 1 ========")<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>
@@ -156,3 +153,5 @@ function IndentV()
 endfunction
 map <Leader>iv :call IndentV()<cr>
 
+nnoremap ]r :ALENextWrap<CR>     " move to the next ALE warning / error
+nnoremap [r :ALEPreviousWrap<CR> " move to the previous ALE warning / error

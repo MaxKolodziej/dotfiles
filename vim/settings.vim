@@ -94,14 +94,31 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1
 filetype plugin indent on
 syntax enable
 
-let g:syntastic_ruby_checkers          = ['rubocop', 'mri']
-let g:syntastic_check_on_open = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_debug = 0 " 33 3
-let g:syntastic_ruby_rubocop_exec      = '/Users/max/.rbenv/shims/rubocop'
-let g:syntastic_warning_symbol = 'WW'
-let g:syntastic_error_symbol = 'EE'
-let g:syntastic_coffee_coffeelint_args = "-f .coffeelint.json"
+let g:ale_linters = {
+\   'ruby': ['rubocop'],
+\   'python': ['flake8', 'pylint'],
+\   'javascript': ['eslint'],
+\   'vue': ['eslint']
+\}
+
+let g:ale_ruby_rubocop_executable = '/Users/max/.rbenv/shims/rubocop'
+au FileType javascript setlocal formatprg=prettier
+au FileType javascript.jsx setlocal formatprg=prettier
+au FileType typescript setlocal formatprg=prettier\ --parser\ typescript
+au FileType html setlocal formatprg=js-beautify\ --type\ html
+au FileType scss setlocal formatprg=prettier\ --parser\ css
+au FileType css setlocal formatprg=prettier\ --parser\ css
+
+let g:ale_fixers = {
+  \    'javascript': ['prettier'],
+  \    'typescript': ['prettier', 'tslint'],
+  \    'vue': ['eslint'],
+  \    'scss': ['prettier'],
+  \    'html': ['prettier'],
+  \    'reason': ['refmt']
+\}
+let g:ale_fix_on_save = 1
+
 
 set spell spelllang=en_us
 
@@ -110,3 +127,12 @@ set cmdheight=2
 let g:bufferline_echo=0
 "let g:ctrlspace_set_default_mapping=0
 "let g:ctrlspace_default_mapping_key="<C-b>"
+let g:gutentags_cache_dir = expand('/Users/max/.cache/vim/ctags/')
+let g:gutentags_generate_on_new = 1
+let g:gutentags_generate_on_missing = 1
+let g:gutentags_generate_on_write = 1
+let g:gutentags_generate_on_empty_buffer = 0
+let g:gutentags_ctags_exclude = [
+      \ '*.git',
+      \ 'public/packs'
+      \ ]
