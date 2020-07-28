@@ -1,6 +1,4 @@
-inoremap jj <esc>
 nnoremap ; :
-inoremap kk <esc>
 imap <C-d> <del>
 "imap <C-f> <Esc>wdiwi
 nmap <Space> i_<Esc>r
@@ -84,6 +82,8 @@ nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 map <F7> gg=G<C-o><C-o>
 vnoremap <C-k> "ky
 nmap <C-k> "kp
+vnoremap <C-j> "jy
+nmap <C-j> "jp
 vnoremap <leader>p yOputs "========="<esc>oputs <esc>p$oputs "========="<esc>
 vnoremap <leader>c yOconsole.log("=========")<esc>oconsole.log(<esc>p$i)<esc>oconsole.log("=========")<esc>
 noremap <leader>1 Oputs "========= 1 ========="<esc>
@@ -91,18 +91,18 @@ noremap <leader>2 Oconsole.log("======== 1 ========")<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>
-nmap w0 :SetRating 0<CR>
-nmap w1 :SetRating 20<CR>
-nmap w2 :SetRating 40<CR>
-nmap w3 :SetRating 60<CR>
-nmap w4 :SetRating 80<CR>
-nmap w5 :SetRating 100<CR>
+"nmap w0 :SetRating 0<CR>
+"nmap w1 :SetRating 20<CR>
+"nmap w2 :SetRating 40<CR>
+"nmap w3 :SetRating 60<CR>
+"nmap w4 :SetRating 80<CR>
+"nmap w5 :SetRating 100<CR>
 
-map <silent> b <Plug>CamelCaseMotion_b
-map <silent> e <Plug>CamelCaseMotion_e
+" map <silent> b <Plug>CamelCaseMotion_b
+" map <silent> e <Plug>CamelCaseMotion_e
 "sunmap w
-sunmap b
-sunmap e
+" sunmap b
+" sunmap e
 
 let g:ctrlp_map = '<c-i>'
 "

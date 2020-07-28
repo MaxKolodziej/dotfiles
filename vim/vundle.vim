@@ -23,7 +23,7 @@
  Bundle 'Lokaltog/vim-easymotion'
  Bundle 'vim-scripts/YankRing.vim'
  Bundle 'tpope/vim-eunuch'
- Bundle 'bkad/CamelCaseMotion'
+ "Bundle 'bkad/CamelCaseMotion'
  "Bundle 'Shougo/neocomplcache.vim'
  Bundle 'slim-template/vim-slim'
  Bundle 'szw/vim-ctrlspace'
@@ -31,6 +31,7 @@
  Bundle 'ludovicchabant/vim-gutentags'
  Bundle 'kristijanhusak/vim-js-file-import'
  Bundle 'dense-analysis/ale'
+ Bundle 'scrooloose/vim-colon-therapy'
 
  Bundle "xolox/vim-misc"
  " Bundle "xolox/vim-notes"

@@ -117,7 +117,7 @@ let g:ale_fixers = {
   \    'html': ['prettier'],
   \    'reason': ['refmt']
 \}
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
 
 
 set spell spelllang=en_us
@@ -136,3 +136,5 @@ let g:gutentags_ctags_exclude = [
       \ '*.git',
       \ 'public/packs'
       \ ]
+let g:airline#extensions#gutentags#enabled = 1
+

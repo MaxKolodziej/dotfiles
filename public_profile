@@ -41,8 +41,9 @@ alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
 alias jfc="RAILS_ENV=test SKIP_COVERAGE=true bundle exec rake javascript_fixtures:create"
 alias seed="bundle exec rake db:seed"
-alias meteo="curl -4 wttr.in/Cracow"
 alias merged="git log --grep=Merge"
+alias nuget="mono /usr/local/bin/nuget.exe"
+alias rel_locale="bundle exec rails react_on_rails:locale"
 
 alias d_e="docker exec -it"
 alias d_p="docker ps"
@@ -58,9 +59,19 @@ function d_up {
     echo "You forgot to deamonize?"
     sleep 1
   fi
-  docker-compose -f docker-compose.max.yml up $@
+  if [ -f docker-compose.max.yml ] ; then
+    docker-compose -f docker-compose.max.yml up $@
+  else
+    docker-compose -f docker-compose.yml up $@
+  fi
 }
-alias d_stop="docker-compose -f docker-compose.max.yml stop"
+function d_stop {
+  if [ -f docker-compose.max.yml ] ; then
+    docker-compose -f docker-compose.max.yml stop $@
+  else
+    docker-compose -f docker-compose.yml stop $@
+  fi
+}
 
 function dl {
   alias | grep -i ^d_
@@ -121,7 +132,6 @@ alias mongo="mongod --dbpath=/Users/max/workspace/mongodb"
 alias es="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
 alias tun="sudo tunnels 127.0.0.1:443 127.0.0.1:80"
 alias rab="rabbitmq-server"
-alias fore="foreman start"
 alias ttr="touch tmp/restart.txt"
 
 alias unstash="git stash pop"
@@ -424,6 +434,10 @@ function rlfix {
   eval $command
 }
 
+function ip6 {
+  echo "684D:1111:222:3333:4444:5555:6:77" | pbcopy
+}
+
 function cn {
  curl $1 | cat -n | awk 'NR == n - 1 || NR == n || NR == n + 1' n=$2
 }
@@ -524,6 +538,17 @@ alias fs="foreman start -f Procfile.dev"
 
 alias nt="npm test"
 alias ntu="npm test -- -u"
+alias ne="npm run lint"
+function nef() {
+  if [[ -z $1 ]]
+  then
+    npm run eslint-fix
+  else
+    eslint --fix $1 -c .eslintrc
+  fi
+}
+
+alias find_by_port="netstat -vanp tcp | grep 3000"
 
 # export LDFLAGS="-L/usr/local/opt/libxml2/lib"
 # export CPPFLAGS="-I/usr/local/opt/libxml2/include"
