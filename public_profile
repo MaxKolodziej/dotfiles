@@ -139,6 +139,38 @@ alias cuc='bundle exec cucumber'
 
 alias nginx_logs=/usr/local/Cellar/nginx/1.4.4/logs
 
+function os {
+  case "$(uname -s)" in
+
+   Darwin)
+     echo 'OSX'
+     ;;
+
+   Linux)
+     echo 'Linux'
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     echo 'MS Windows'
+     ;;
+
+   *)
+     echo 'Other OS'
+     ;;
+ esac
+}
+
+function clip_copy {
+  read text
+  myos=$(os)
+  if [[ $myos == "Linux" ]]
+  then
+    echo $text | xclip -selection clipboard
+  else
+    echo $text | pbcopy
+  fi
+}
+
 alias pb2haml='pbpaste | html2haml | pbcopy'
 
 alias docker_es='docker exec -it $(docker-compose ps -q elasticsearch) /bin/bash'
@@ -186,7 +218,7 @@ function k {
 function cb {
   branch_name=$(ruby ~/dotfiles/create_name_for_branch.rb $1 $2)
   echo $branch_name
-  echo $branch_name | tr -d "\n" | pbcopy
+  echo $branch_name | tr -d "\n" | clip_copy
 }
 
 function cl {
@@ -195,7 +227,7 @@ function cl {
 
 function cf {
   python ~/dotfiles/copy_line.py
-  echo $# | cut -d ':' -f1 | pbcopy
+  echo $# | cut -d ':' -f1 | clip_copy
 }
 
 function rts {
@@ -220,7 +252,7 @@ function ggc {
     line=$(echo $result | awk "NR==$1" | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
     echo $line | tr -d '\n'
     echo ""
-    echo $line | tr -d '\n' | pbcopy
+    echo $line | tr -d '\n' | clip_copy
   fi
 }
 
@@ -251,7 +283,7 @@ function vg {
   file=$(echo $line | cut -d ':' -f1)
   line_number=$(echo $line | cut -d ':' -f2)
 
-  echo $file | pbcopy
+  echo $file | clip_copy
   if [[ $action == 'e' ]]
   then
     osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
@@ -275,7 +307,7 @@ function gsc {
     line=$(echo $result | awk "NR==$1" | awk '{print $3}' | tr -d " \r\n\t")
     echo $line | tr -d '\n'
     echo ""
-    echo $line | tr -d '\n' | pbcopy
+    echo $line | tr -d '\n' | clip_copy
   fi
 }
 
@@ -319,7 +351,7 @@ function gst {
 
   file=$(git status --porcelain | awk "NR==$user_command" | sed 's/ *$//' | sed 's/^ *//' | cut -d ' ' -f2 | tr -d "# \n\t\r")
   echo $file
-  echo $file | pbcopy
+  echo $file | clip_copy
   if [[ $action == 'e' ]]
   then
     osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
@@ -342,7 +374,7 @@ function kill1 {
 function rt {
   TESTS_STDOUT=1 RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
   tests=$(last_tests)
-  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | pbcopy
+  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | clip_copy
 }
 
 function last_tests {
@@ -355,7 +387,7 @@ function lt {
   read test_no
   test_file=$(last_tests | awk "NR==$test_no" | tr -d ' ')
   echo "copied $test_file"
-  echo "$test_file" | tr -dc '[[:print:]]' | pbcopy
+  echo "$test_file" | tr -dc '[[:print:]]' | clip_copy
 }
 
 function rk {
@@ -364,7 +396,7 @@ function rk {
   fi
   TESTS_STDOUT=0 RAILS_ENV=test bundle exec rake $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests_rake.txt)
   tests=$(last_tests_rake)
-  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | pbcopy
+  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | clip_copy
 }
 
 function last_tests_rake {
@@ -377,7 +409,7 @@ function ltr {
   read test_no
   test_file=$(last_tests_rake | awk "NR==$test_no" | tr -d ' ' | tr -dc '[[:print:]]')
   echo "copied $test_file"
-  echo "$test_file" | pbcopy
+  echo "$test_file" | clip_copy
 }
 
 alias gdstat="git diff --stat develop..HEAD"
@@ -435,7 +467,7 @@ function rlfix {
 }
 
 function ip6 {
-  echo "684D:1111:222:3333:4444:5555:6:77" | pbcopy
+  echo "684D:1111:222:3333:4444:5555:6:77" | clip_copy
 }
 
 function cn {
@@ -532,7 +564,12 @@ alias fixdbtest="RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
 alias fixdbdev="RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
 alias vimup="let i=1 | g/,\d\+)/s//\=','.i.')'/ | let i=i+1"
 alias scalafmt="sbt scalafmt"
-export PATH="$(brew --prefix qt)/bin:$PATH"
+
+myos=$(os)
+if [[ $myos == "OSX" ]]
+  then
+    export PATH="$(brew --prefix qt)/bin:$PATH"
+  fi
 alias db_fix="RAILS_ENV=test rake db:drop:primary db:drop:secondary db:create:primary db:create:secondary db:migrate:primary db:migrate:secondary"
 alias fs="foreman start -f Procfile.dev"
 

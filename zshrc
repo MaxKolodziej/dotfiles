@@ -9,7 +9,7 @@ source ~/.public_profile
 
 # define the plugins
 source ~/antigen.zsh
-antigen bundle olivierverdier/zsh-git-prompt
+antigen bundle starcraftman/zsh-git-prompt
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-completions
 antigen bundle Peeja/ctrl-zsh
@@ -70,3 +70,7 @@ bindkey -v
 update_current_git_vars
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
