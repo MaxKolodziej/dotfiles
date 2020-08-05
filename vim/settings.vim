@@ -20,16 +20,6 @@ set runtimepath+=~/.vim/ultisnips
 
 set wildignore+=**/tmp/**,*.so,*.swp,*.zip,**/.*/**
 
-if has("gui_running")
-  let g:airline#extensions#tabline#enabled = 0
-else
-  let g:airline#extensions#tabline#enabled = 1
-end
-let g:airline#extensions#whitespace#enabled = 0
-
-"set guifont=Inconsolata\-dz\ for\ Powerline
-let g:Powerline_symbols = 'fancy'
-
 "hi CursorColumn term=underline cterm=underline guibg=#F4F4F4 
 "hi! link CursorLine CursorColumn 
 "au CursorHold,CursorHoldI * set cul cul 
@@ -89,8 +79,6 @@ let g:ycm_complete_in_comments = 1
 let g:ycm_seed_identifiers_with_syntax = 1 
 let g:ycm_collect_identifiers_from_comments_and_strings = 1 
 
-"let g:airline_section_b = ''
-
 filetype plugin indent on
 syntax enable
 
@@ -136,5 +124,4 @@ let g:gutentags_ctags_exclude = [
       \ '*.git',
       \ 'public/packs'
       \ ]
-let g:airline#extensions#gutentags#enabled = 1
 

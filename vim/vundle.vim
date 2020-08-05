@@ -13,7 +13,7 @@
  "
  " original repos on github
  "Bundle 'vim-scripts/lastpos.vim'
- Bundle 'bling/vim-airline'
+ Bundle 'https://github.com/itchyny/lightline.vim.git'
  Bundle 'scrooloose/nerdtree'
  Bundle 'tpope/vim-rails'
  Bundle 'tpope/vim-fugitive'
