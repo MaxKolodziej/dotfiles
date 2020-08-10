@@ -243,16 +243,17 @@ function spp {
 }
 
 function ggc {
-  command=$(history | grep " gg " | tail -1 | awk '{print $2,$3,$4,$5}')
+  command=$(history | grep " gg " | tail -1 | awk '{print $2,$3,$4,$5,$6,$7,$8,$9}')
   result=$(eval "$command")
   if [[ -z $1 ]]
   then
     echo 'Put line number'
   else
-    line=$(echo $result | awk "NR==$1" | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
-    echo $line | tr -d '\n'
+    number=$1
+    line=$(echo $result | awk "\$1 ~ /^$number/" | head -1 | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
+    echo $line | tr -d " \r\n\t"
     echo ""
-    echo $line | tr -d '\n' | clip_copy
+    echo $line | tr -d " \r\n\t" | clip_copy
   fi
 }
 
@@ -571,7 +572,7 @@ if [[ $myos == "OSX" ]]
     export PATH="$(brew --prefix qt)/bin:$PATH"
   fi
 alias db_fix="RAILS_ENV=test rake db:drop:primary db:drop:secondary db:create:primary db:create:secondary db:migrate:primary db:migrate:secondary"
-alias fs="foreman start -f Procfile.dev"
+alias fs="foreman start"
 
 alias nt="npm test"
 alias ntu="npm test -- -u"
