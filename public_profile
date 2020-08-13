@@ -165,9 +165,9 @@ function clip_copy {
   myos=$(os)
   if [[ $myos == "Linux" ]]
   then
-    echo $text | xclip -selection clipboard
+    echo $text | tr -d '[:cntrl:]' | xclip -selection clipboard # tr will remove colors and new lines ^M
   else
-    echo $text | pbcopy
+    echo $text | tr -d '[:cntrl:]' | pbcopy
   fi
 }
 
