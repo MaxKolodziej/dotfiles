@@ -133,6 +133,9 @@ let g:EasyMotion_keys = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012
 
 let g:EasyMotion_mapping_w = 's'
 let g:EasyMotion_mapping_b = 'S'
+
+xnoremap u <nop>
+xnoremap U <nop>
 "
 " Quickly edit/reload the vimrc file
 command! -nargs=0 Reload so $MYVIMRC
