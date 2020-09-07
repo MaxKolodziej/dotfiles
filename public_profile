@@ -439,15 +439,15 @@ function gor {
   fi
 }
 
-function gbs {
+function gbso {
   git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 25
 }
 
 function gon {
-  gbs | head -n 15 | nl
+  gbso | head -n 15 | nl
   echo 'Which branch: '
   read branch_number
-  branch_name=$(gbs | awk "NR==$branch_number" | tr -d ' ')
+  branch_name=$(gbso | awk "NR==$branch_number" | tr -d ' ')
   git checkout $branch_name
   update_current_git_vars # remove if not using zsh-git-prompt
 }

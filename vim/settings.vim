@@ -18,6 +18,11 @@ set synmaxcol=200
 set noswapfile
 set runtimepath+=~/.vim/ultisnips
 
+set path+=javascript
+set path+=spec/javascript
+set suffixesadd+=.js
+set suffixesadd+=.jsx
+
 set wildignore+=**/tmp/**,*.so,*.swp,*.zip,**/.*/**
 
 "hi CursorColumn term=underline cterm=underline guibg=#F4F4F4 
