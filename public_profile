@@ -375,7 +375,7 @@ function kill1 {
 }
 
 function rt {
-  TESTS_STDOUT=1 RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
+  RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
   tests=$(last_tests)
   echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | clip_copy
 }
@@ -606,3 +606,9 @@ export PATH="/usr/local/opt/berkeley-db@4/bin:$PATH"
 #export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
 #export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"
 #  gem install nokogiri -v '1.4.4' --source 'https://rubygems.org/' -- --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2 --with-xml2-lib=/usr/local/opt/libxml2/lib
+#
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Ctrl><Super>l']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Ctrl><Super>h']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Ctrl><Super><Shift>h']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Ctrl><Super><Shift>l']"
+
