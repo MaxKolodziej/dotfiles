@@ -27,6 +27,7 @@ vim/.netrwhist
 /docker-compose.max.yml
 /docker-compose.backend.yml
 /docker-compose.efraud.yml
+cockroach-data
 
 # Ignore doc dir
 .yardoc

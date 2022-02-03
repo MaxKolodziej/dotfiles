@@ -90,28 +90,29 @@ syntax enable
 let g:ale_linters = {
 \   'ruby': ['rubocop'],
 \   'python': ['flake8', 'pylint'],
-\   'javascript': ['eslint'],
+\   'javascript': ['prettier','eslint'],
 \   'vue': ['eslint']
 \}
 
 let g:ale_ruby_rubocop_executable = '/Users/max/.rbenv/shims/rubocop'
-au FileType javascript setlocal formatprg=prettier
-au FileType javascript.jsx setlocal formatprg=prettier
+au FileType javascript setlocal formatprg=prettier-eslint
+au FileType javascript.jsx setlocal formatprg=prettier-eslint
 au FileType typescript setlocal formatprg=prettier\ --parser\ typescript
 au FileType html setlocal formatprg=js-beautify\ --type\ html
 au FileType scss setlocal formatprg=prettier\ --parser\ css
 au FileType css setlocal formatprg=prettier\ --parser\ css
 
 let g:ale_fixers = {
-  \    'javascript': ['prettier'],
-  \    'typescript': ['prettier', 'tslint'],
+  \    'javascript': ['prettier','eslint'],
+  \    'typescript': ['prettier','eslint'],
   \    'vue': ['eslint'],
   \    'scss': ['prettier'],
   \    'html': ['prettier'],
   \    'reason': ['refmt']
 \}
 let g:ale_fix_on_save = 0
-
+let g:ale_javascript_prettier_options=" --list-different 'javascript/bundles/**/*.{js,es6,jsx,scss}'; prettier --list-different 'spec/javascript/components/**/*.{js,jsx}'"
+let g:ale_javascript_eslint_options=" -c .eslintrc --ext js,jsx"
 
 set spell spelllang=en_us
 
@@ -130,3 +131,34 @@ let g:gutentags_ctags_exclude = [
       \ 'public/packs'
       \ ]
 
+
+function! LightlineCurrentDirectory() abort
+  return fnamemodify(getcwd(), ':t')
+endfunction
+
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+        \ 'left': [ [ 'mode', 'paste' ],
+        \           [ 'cwd' ],
+        \           [ 'readonly', 'filename', 'modified' ] ],
+        \ 'right': [ [ 'lineinfo' ],
+        \            [ 'percent' ],
+        \            [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \  },
+      \ 'inactive': {
+        \ 'left': [ [ 'mode', 'paste' ],
+        \           [ 'cwd' ],
+        \           [ 'readonly', 'cwd', 'filename', 'modified' ] ],
+        \ 'right': [ [ 'lineinfo' ],
+        \            [ 'percent' ],
+        \            [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \  },
+      \ 'component_function': {
+      \   'cwd': 'LightlineCurrentDirectory'
+      \  },
+      \ 'enable': {
+      \   'statusline': 1,
+      \   'tabline': 1
+      \  },
+    \  }

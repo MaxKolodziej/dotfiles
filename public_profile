@@ -75,7 +75,11 @@ function d_stop {
 
 function dl {
   alias | grep -i ^d_
-  declare -f | sed -n '/^d_/,/\}/p'
+  declare +f | gr ^d_
+}
+function kl {
+  alias | grep -i ^k_
+  declare +f | gr ^k_
 }
 
 alias rem_lines="sed -e '2,6d'"
@@ -233,11 +237,17 @@ function cf {
 }
 
 function rts {
-  bundle exec rake routes | grep -i "$1"
+  bundle exec rails routes | grep -i "$1"
 }
 
 function gg {
   git grep -i -n $@ | cat -n | cut -c -180
+}
+
+function ggf {
+  echo $1
+  echo $2
+  git grep -i --files-with-matches $1 | xargs cat | grep -v $2
 }
 
 function spp {
@@ -445,6 +455,10 @@ function gbso {
   git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 25
 }
 
+function csleep {
+  while :; do sleep 28; echo -n ' ' >&2; done &
+}
+
 function gon {
   gbso | head -n 15 | nl
   echo 'Which branch: '
@@ -455,8 +469,8 @@ function gon {
 }
 
 function rfix {
-  filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | tr '\n' ' ')
-  command="bundle exec rubocop -a $filenames"
+  filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | gr '.rb' | tr '\n' ' ')
+  command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
 }
@@ -576,18 +590,19 @@ if [[ $myos == "OSX" ]]
 alias db_fix="RAILS_ENV=test rake db:drop:primary db:drop:secondary db:create:primary db:create:secondary db:migrate:primary db:migrate:secondary"
 alias fs="foreman start"
 
-alias nt="npm test"
-alias ntu="npm test -- -u"
+alias nt="DEBUG_PRINT_LIMIT=30000 npm test"
+alias ntu="DEBUG_PRINT_LIMIT=30000 npm test -- -u"
 alias ne="npm run lint"
 function nef() {
   if [[ -z $1 ]]
   then
     npm run eslint-fix
   else
-    eslint --fix $1 -c .eslintrc
+    npm run --fix $1 -c .eslintrc
   fi
 }
 
+alias roach="cockroach start-single-node --insecure --host=localhost  --logtostderr"
 alias find_by_port="netstat -vanp tcp | grep 3000"
 
 # export LDFLAGS="-L/usr/local/opt/libxml2/lib"
