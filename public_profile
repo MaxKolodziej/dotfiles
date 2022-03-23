@@ -23,6 +23,21 @@ alias gm="git merge"
 alias gsh="git push --follow-tags"
 alias gtags='git for-each-ref --sort="-*authordate" --format="%(tag) - %(taggerdate:short)%0a%(contents)" refs/tags | less'
 alias gll="git pull"
+function glc {
+  command=$(git show --name-only --oneline HEAD | awk '{print $1}' | cat -n)
+  echo $command
+  result=$command
+  if [[ -z $1 ]]
+  then
+    echo 'Put line number'
+  else
+    number=$1
+    line=$(echo $result | awk "\$1 ~ /^$number/" | head -1 | awk '{print $2}' | tr -d " \r\n\t")
+    echo $line | tr -d " \r\n\t"
+    echo ""
+    echo $line | tr -d " \r\n\t" | clip_copy
+  fi
+}
 alias gca="git commit --amend"
 alias got="git checkout --theirs ."
 alias goo="git checkout --ours ."
@@ -36,6 +51,12 @@ alias gml="git merge -"
 alias gom="git checkout master"
 alias gdm="git diff --name-only master"
 alias gsl="git stash list"
+# commit name from branch
+function gcname {
+   name=$(git rev-parse --abbrev-ref HEAD | sed "s/\//: /g" | sed "s/-/ /g" | sed "s/XCON /XCON-/g")
+   echo $name
+   echo $name | pbcopy
+}
 alias rcop="bundle exec rubocop . -DR"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
@@ -188,6 +209,16 @@ function rmd {
 
 function rmu {
   rake db:migrate:up VERSION=$1
+}
+
+function rollback {
+  rake db:rollback STEP=$1
+  RAILS_ENV=test rake db:rollback STEP=$1
+}
+
+function migrate {
+  rake db:migrate
+  RAILS_ENV=test rake db:migrate
 }
 
 function db_test {
@@ -452,7 +483,7 @@ function gor {
 }
 
 function gbso {
-  git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 25
+  git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 30
 }
 
 function csleep {
@@ -460,7 +491,7 @@ function csleep {
 }
 
 function gon {
-  gbso | head -n 15 | nl
+  gbso | head -n 30 | nl
   echo 'Which branch: '
   read branch_number
   branch_name=$(gbso | awk "NR==$branch_number" | tr -d ' ')
@@ -598,7 +629,7 @@ function nef() {
   then
     npm run eslint-fix
   else
-    npm run --fix $1 -c .eslintrc
+    npm run env -- eslint --fix $1 -c .eslintrc
   fi
 }
 

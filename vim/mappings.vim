@@ -118,14 +118,22 @@ command! Vundle E ~/dotfiles/vim/vundle.vim
 command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
 command! -nargs=0 Mr RemoveMarkHighlights
 
-function! RubyFilename(selection)
+function! RubyFilename(selection, spec_file)
+  if a:spec_file
+    let file_extension = "_spec.rb"
+  else
+    let file_extension = ".rb"
+  endif
+
   let search_for = '\(\<\u\l\+\|\l\+\)\(\u\)'
   let replace_with = '\l\1_\l\2'
-  let file_name = substitute(a:selection, search_for, replace_with, "g") . ".rb"
-  echom file_name
-  let @+=file_name
+  let file_name = substitute(a:selection, search_for, replace_with, "g")
+  let full_name = file_name . file_extension
+  echom l:full_name
+  execute 'Rename' l:full_name
 endfunction
-nnoremap yc :call RubyFilename(expand('<cword>'))<CR><esc>
+nnoremap rfc :call RubyFilename(expand('<cword>'),0)<CR><esc>
+nnoremap rfs :call RubyFilename(expand('<cword>'),1)<CR><esc>
 
 " command! -nargs=1 RunCommandInTerminal call RunCommandInTerminal("vg " . <args>)
 " map ma yiw:RunCommandInTerminal('<C-r>"')<CR>
