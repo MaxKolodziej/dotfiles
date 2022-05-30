@@ -15,7 +15,6 @@
  "Bundle 'vim-scripts/lastpos.vim'
  Bundle 'https://github.com/itchyny/lightline.vim.git'
  Bundle 'scrooloose/nerdtree'
- Bundle 'tpope/vim-rails'
  Bundle 'tpope/vim-fugitive'
  Bundle 'tpope/vim-surround'
  Bundle 'tpope/vim-abolish'
@@ -26,23 +25,27 @@
  "Bundle 'bkad/CamelCaseMotion'
  "Bundle 'Shougo/neocomplcache.vim'
  Bundle 'slim-template/vim-slim'
- Bundle 'szw/vim-ctrlspace'
+ "Bundle 'szw/vim-ctrlspace'
  Bundle 'Valloric/YouCompleteMe'
- Bundle 'ludovicchabant/vim-gutentags'
+ "Bundle 'ludovicchabant/vim-gutentags'
  Bundle 'kristijanhusak/vim-js-file-import'
  Bundle 'dense-analysis/ale'
  Bundle 'scrooloose/vim-colon-therapy'
 
  Bundle "xolox/vim-misc"
- " Bundle "xolox/vim-notes"
- " Bundle 'vim-scripts/Txtfmt-The-Vim-Highlighter'
- " Bundle 'airblade/vim-gitgutter'
  Bundle 'Tumbler/highlightMarks'
+ Bundle 'vim-ruby/vim-ruby'
+ Bundle 'tpope/vim-rails'
+ Bundle 'tpope/vim-rbenv'
+ Bundle 'tpope/vim-bundler'
 
- Bundle 'kien/ctrlp.vim'
+ "Bundle 'kien/ctrlp.vim'
+ Bundle 'nvim-treesitter/nvim-treesitter'
+ Bundle 'nvim-lua/plenary.nvim'
+ Bundle 'nvim-telescope/telescope.nvim'
  Bundle 'othree/yajs.vim'
  Bundle 'mxw/vim-jsx'
- 
+
  Bundle 'kchmck/vim-coffee-script'
 
  Bundle 'git@github.com:vim-scripts/cscope.vim.git'

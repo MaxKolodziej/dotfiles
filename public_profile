@@ -591,21 +591,7 @@ export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-#
-#function push_to_source_file() {
-#  lines_with_pattern=`cat $SHELL_SOURCE_FILE | grep -i $1 | awk '{print $1}' | wc -l`
-#  echo $lines_with_pattern
-#
-#  if [[ $lines_with_pattern -le "1" ]]
-#  then
-#    echo $1 >> $SHELL_SOURCE_FILE
-#  else
-#    echo 'already configured'
-#  fi
-#}
 
-#echo "Setup docker"
-#javascript_fixturespush_to_source_file 'test'
 alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD"
 
 alias fixdbtest="RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
@@ -633,6 +619,7 @@ function nef() {
   fi
 }
 
+alias tags="ripper-tags -R * `bundle show --paths`"
 alias roach="cockroach start-single-node --insecure --host=localhost  --logtostderr"
 alias find_by_port="netstat -vanp tcp | grep 3000"
 
@@ -655,6 +642,13 @@ export PATH="/usr/local/opt/berkeley-db@4/bin:$PATH"
 #
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Ctrl><Super>l']"
 gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Ctrl><Super>h']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "['<Ctrl><Super>k']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "['<Ctrl><Super>j']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Ctrl><Super><Shift>h']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Ctrl><Super><Shift>l']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "['<Ctrl><Super><Shift>k']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "['<Ctrl><Super><Shift>j']"
 
+
+for i in $(seq 1 9); do gsettings set org.gnome.shell.extensions.dash-to-dock app-hotkey-${i} '[]'; done
+for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-${i} '[]'; done
