@@ -84,10 +84,11 @@ vnoremap <C-k> "ky
 nmap <C-k> "kp
 vnoremap <C-j> "jy
 nmap <C-j> "jp
-vnoremap <leader>p yOputs "========="<esc>oputs <esc>p$oputs "========="<esc>
-vnoremap <leader>c yOconsole.log("=========")<esc>oconsole.log(<esc>p$i)<esc>oconsole.log("=========")<esc>
-noremap <leader>1 Oputs "========= 1 ========="<esc>
-noremap <leader>2 Oconsole.log("======== 1 ========")<esc>
+vnoremap <leader>h yOputs(<esc>p$a).inspect<esc>Oputs '----<esc>p$a-----'
+vnoremap <leader>c yOconsole.log(<esc>p$a).inspect<esc>Oconsole.log '----<esc>p$a-----'
+"noremap <leader>hr ^iputs(<esc>A).inspect<esc>
+"noremap <leader>c ^iconsole.log(<esc>A)<esc>
+"noremap <leader>hm ^v$yko<esc>p^i'----<esc>A----'<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>
@@ -111,7 +112,7 @@ command! -nargs=1 Term let g:vim_terminal=<args>
 command! Mappings E ~/dotfiles/vim/mappings.vim
 command! Keys E ~/dotfiles/vim/mappings.vim
 command! Settings E ~/dotfiles/vim/settings.vim
-command! Vundle E ~/dotfiles/vim/vundle.vim
+command! Manager E ~/dotfiles/vim/plug.vim
 command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
 command! -nargs=0 Mr RemoveMarkHighlights
 

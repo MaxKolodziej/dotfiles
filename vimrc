@@ -2,12 +2,10 @@
 
  set laststatus=2
 
- source ~/.vim/vundle.vim
+ source ~/.vim/plug.vim
 
  source ~/.vim/settings.vim
 
  source ~/.vim/mappings.vim
 
  source ~/.vim/rails_tests.vim
-
-" source ~/.vim/play_song_in_itunes.vim

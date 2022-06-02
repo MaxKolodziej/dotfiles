@@ -55,7 +55,7 @@ alias gsl="git stash list"
 function gcname {
    name=$(git rev-parse --abbrev-ref HEAD | sed "s/\//: /g" | sed "s/-/ /g" | sed "s/XCON /XCON-/g")
    echo $name
-   echo $name | pbcopy
+   echo $name | clip_copy
 }
 alias rcop="bundle exec rubocop . -DR"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
@@ -416,44 +416,7 @@ function kill1 {
 }
 
 function rt {
-  RAILS_ENV=test bundle exec rspec $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests.txt)
-  tests=$(last_tests)
-  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | clip_copy
-}
-
-function last_tests {
-  cat /tmp/last_tests.txt | grep -i rspec | awk -v fs="(spec |#)" '{print $2}'
-}
-
-function lt {
-  last_tests | cat -n
-  echo "which test: "
-  read test_no
-  test_file=$(last_tests | awk "NR==$test_no" | tr -d ' ')
-  echo "copied $test_file"
-  echo "$test_file" | tr -dc '[[:print:]]' | clip_copy
-}
-
-function rk {
-  if [ -e /tmp/last_tests_rake.txt ]
-  then cp /tmp/last_tests_rake.txt /tmp/last_tests_rake.back.txt
-  fi
-  TESTS_STDOUT=0 RAILS_ENV=test bundle exec rake $@ | tee >(sed -n '/^Failed examples:/,/Randomized/p' > /tmp/last_tests_rake.txt)
-  tests=$(last_tests_rake)
-  echo $tests | awk 'NR==1' | tr -dc '[[:print:]]' | clip_copy
-}
-
-function last_tests_rake {
-  cat /tmp/last_tests_rake.txt | grep -i rspec | awk -v fs="(spec |#)" '{print $2}'
-}
-
-function ltr {
-  last_tests_rake | cat -n
-  echo "which test: "
-  read test_no
-  test_file=$(last_tests_rake | awk "NR==$test_no" | tr -d ' ' | tr -dc '[[:print:]]')
-  echo "copied $test_file"
-  echo "$test_file" | clip_copy
+  RAILS_ENV=test bundle exec rspec $@
 }
 
 alias gdstat="git diff --stat develop..HEAD"
@@ -521,13 +484,7 @@ function ip6 {
 function cn {
  curl $1 | cat -n | awk 'NR == n - 1 || NR == n || NR == n + 1' n=$2
 }
-#stty intr \^k
 
-#GIT_PS1_SHOWUPSTREAM="auto"
-#GIT_PS1_SHOWCOLORHINTS="yes"
-#
-#export PROMPT_COMMAND='__git_ps1 "\u@\h:\W" "\\\$ ";'
-#
 export EDITOR=vim
 
 rc () {
@@ -586,9 +543,6 @@ export PATH=$PATH:~/android/android-sdk/sdk/tools
 export PATH=$PATH:/usr/local/mysql/bin
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
-# fixssl="export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/"
-
-
 export RBENV_ROOT="$HOME/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
@@ -623,6 +577,7 @@ alias tags="ripper-tags -R * `bundle show --paths`"
 alias roach="cockroach start-single-node --insecure --host=localhost  --logtostderr"
 alias find_by_port="netstat -vanp tcp | grep 3000"
 
+# fixssl="export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/"
 # export LDFLAGS="-L/usr/local/opt/libxml2/lib"
 # export CPPFLAGS="-I/usr/local/opt/libxml2/include"
 # export CPPFLAGS="-I/usr/local/opt/libxml2/include/libxml2"
@@ -630,25 +585,40 @@ alias find_by_port="netstat -vanp tcp | grep 3000"
 # export CPPFLAGS="-I/usr/local/opt/libiconv/include"
 # export LDFLAGS="-L/usr/local/opt/imagemagick@6/lib"
 # export CPPFLAGS="-I/usr/local/opt/imagemagick@6/include"
-export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
-export PATH="/usr/local/opt/libiconv/bin:$PATH"
-export PATH="/usr/local/opt/openssl/bin:$PATH"
-export PATH="/usr/local/opt/libxml2/bin:$PATH"
-export PATH="/usr/local/opt/mariadb@10.0/bin:$PATH"
-export PATH="/usr/local/opt/berkeley-db@4/bin:$PATH"
+if [[ $myos == "OSX" ]]
+then
+  export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+  export PATH="/usr/local/opt/libiconv/bin:$PATH"
+  export PATH="/usr/local/opt/openssl/bin:$PATH"
+  export PATH="/usr/local/opt/libxml2/bin:$PATH"
+  export PATH="/usr/local/opt/mariadb@10.0/bin:$PATH"
+  export PATH="/usr/local/opt/berkeley-db@4/bin:$PATH"
+fi
 #export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
 #export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"
 #  gem install nokogiri -v '1.4.4' --source 'https://rubygems.org/' -- --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2 --with-xml2-lib=/usr/local/opt/libxml2/lib
 #
-gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Ctrl><Super>l']"
-gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Ctrl><Super>h']"
-gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "['<Ctrl><Super>k']"
-gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "['<Ctrl><Super>j']"
-gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Ctrl><Super><Shift>h']"
-gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Ctrl><Super><Shift>l']"
-gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "['<Ctrl><Super><Shift>k']"
-gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "['<Ctrl><Super><Shift>j']"
+#
+if [[ $myos == "Linux" ]]
+then
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-right "['<Super>l']"
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-left "['<Super>h']"
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "['<Super>k']"
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-down "['<Super>j']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-left "['<Super><Shift>h']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Super><Shift>l']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "['<Super><Shift>k']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "['<Super><Shift>j']"
 
+  for i in $(seq 1 9); do gsettings set org.gnome.shell.extensions.dash-to-dock app-hotkey-${i} '[]'; done
+  for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-${i} '[]'; done
 
-for i in $(seq 1 9); do gsettings set org.gnome.shell.extensions.dash-to-dock app-hotkey-${i} '[]'; done
-for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-${i} '[]'; done
+  alias swap_alt="setxkbmap -option altwin:swap_lalt_lwin"
+  alias fix_copy="autocutsel -fork & autocutsel -selection PRIMARY -fork &"
+fi
+
+# xmodmap -pke to check key list - use tab as Hyper_L
+# xmodmap -e "keycode 23 = Hyper_L"
+
+# run kinto - ubuntu to macos keyboard mapper
+# journalctl -f --unit=xkeysnal.service -b &

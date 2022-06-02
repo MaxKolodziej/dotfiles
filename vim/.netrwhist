@@ -1,8 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/Users/maks.kolodziej/workspace/cclisting/app/mailers'
-let g:netrw_dirhist_2='/Users/maks.kolodziej/workspace/cclisting/spec/use_cases/logging_in'
-let g:netrw_dirhist_3='/Users/maks.kolodziej/workspace/cclisting/lib/bookmarks_manager'
-let g:netrw_dirhist_4='/Users/maks.kolodziej/workspace/cclisting/lib'
-let g:netrw_dirhist_5='/Users/maks.kolodziej/workspace/cclisting/lib/bookmarks_manager'
-let g:netrw_dirhist_6='/Users/maks.kolodziej/workspace/cclisting/lib/creating_fixtures'
+let g:netrw_dirhistcnt =1
+let g:netrw_dirhist_1='/home/maks/workspace/xsurance/app/models'
