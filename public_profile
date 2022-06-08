@@ -416,7 +416,17 @@ function kill1 {
 }
 
 function rt {
-  RAILS_ENV=test bundle exec rspec $@
+  script /tmp/last_tests.txt -c "RAILS_ENV=test bundle exec rspec $@"
+}
+
+function rtc {
+  failed_tests=$(cat /tmp/last_tests.txt | awk -n '/^Failed examples:/{flag=1;next}/Randomized/{flag=0}flag' | awk -v fs="(spec |#)" '{print $2}' | grep -i spec)
+  echo $failed_tests | cat -n
+  echo 'Which test: '
+  read number
+  echo 'Copied path:'
+  echo $failed_tests | awk "NR==$number"
+  echo $failed_tests | awk "NR==$number" | ansifilter | clip_copy # ansifilter will remove all formatting like colors, etc
 }
 
 alias gdstat="git diff --stat develop..HEAD"
