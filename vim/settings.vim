@@ -136,12 +136,24 @@ function! LightlineCurrentDirectory() abort
   return fnamemodify(getcwd(), ':t')
 endfunction
 
+lua << EOF
+require('telescope').setup({
+  defaults = {
+    shorten_path = true,
+    layout_config = {
+      horizontal = { width = 0.98, mirror = false },
+      preview_width = 0.3
+    }
+  },
+})
+EOF
+
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
         \ 'left': [ [ 'mode', 'paste' ],
         \           [ 'cwd' ],
-        \           [ 'readonly', 'filename', 'modified' ] ],
+        \           [ 'readonly', 'relativepath', 'modified' ] ],
         \ 'right': [ [ 'lineinfo' ],
         \            [ 'percent' ],
         \            [ 'fileformat', 'fileencoding', 'filetype' ] ]

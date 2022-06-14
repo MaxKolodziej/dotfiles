@@ -416,7 +416,7 @@ function kill1 {
 }
 
 function rt {
-  script /tmp/last_tests.txt -c "RAILS_ENV=test bundle exec rspec $@"
+  script /tmp/last_tests.txt -c "RAILS_ENV=test bundle exec rspec $@" # script will save all terminal output to file
 }
 
 function rtc {

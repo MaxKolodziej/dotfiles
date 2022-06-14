@@ -39,6 +39,8 @@ vmap <C-x> "+c
 "Paste only works in Visual and insert mode, so you don't have to worry about the conflict with Ctrl-V and blockwise Visual Mode.
 vmap <C-v> c<ESC>"+p
 imap <C-v> <C-r><C-o>+
+" paste in command line with CTRL-V
+cmap <C-V> <C-R>*
 
 map <C-S-h> :execute "tabmove" tabpagenr() - 2 <CR>
 map <C-S-l> :execute "tabmove" tabpagenr() <CR>
