@@ -24,7 +24,7 @@ alias gsh="git push --follow-tags"
 alias gtags='git for-each-ref --sort="-*authordate" --format="%(tag) - %(taggerdate:short)%0a%(contents)" refs/tags | less'
 alias gll="git pull"
 function glc {
-  command=$(git show --name-only --oneline HEAD | awk '{print $1}' | cat -n)
+  command=$(git show --name-only --oneline HEAD | tail +2 | awk '{print $1}' | cat -n)
   echo $command
   result=$command
   if [[ -z $1 ]]
@@ -34,7 +34,7 @@ function glc {
     number=$1
     line=$(echo $result | awk "\$1 ~ /^$number/" | head -1 | awk '{print $2}' | tr -d " \r\n\t")
     echo $line | tr -d " \r\n\t"
-    echo ""
+    echo "copied to clipboard: "
     echo $line | tr -d " \r\n\t" | clip_copy
   fi
 }

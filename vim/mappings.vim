@@ -34,7 +34,8 @@ noremap <m-0> :tablast<CR>
 noremap H ^
 noremap L $
 
-vmap <C-c> "+yi
+"ctr-c paste
+vmap <C-c> "+y
 vmap <C-x> "+c
 "Paste only works in Visual and insert mode, so you don't have to worry about the conflict with Ctrl-V and blockwise Visual Mode.
 vmap <C-v> c<ESC>"+p

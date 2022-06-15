@@ -50,23 +50,11 @@ let g:highlightMarks_useSigns = 1
 set tags=tags;/
 "set rnu "working very slow :/
 "
-"au FocusLost * :set number
-"au FocusGained * :set relativenumber
-
-"let g:neocomplcache_enable_at_startup = 1
-"let g:neocomplcache_enable_smart_case = 1
-"let g:neocomplcache_min_syntax_length = 3
-"inoremap <expr><C-g>     neocomplcache#undo_completion()
-"inoremap <expr><C-l>     neocomplcache#complete_common_string()
-"" Enable omni completion.
-"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"autocmd FileType ruby set omnifunc=rubycomplete#Complete
-"let g:neocomplcache_enable_fuzzy_completion = 1
-"let g:neocomplcache_fuzzy_completion_start_length = 3
+" trigger `autoread` when files changes on disk
+set autoread
+autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+" notification after file change
+autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
