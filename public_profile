@@ -13,8 +13,8 @@ alias gut='git'
 alias gc="git commit"
 alias gf="git fetch"
 alias gb="git branch"
-alias gd="git diff"
-alias gdc="git diff --cached"
+alias gd="git diff --no-prefix"
+alias gdc="git diff --cached --no-prefix"
 alias ga="git add"
 alias gA="git add -A"
 alias gpb="git pivotal-branch"
@@ -23,6 +23,13 @@ alias gm="git merge"
 alias gsh="git push --follow-tags"
 alias gtags='git for-each-ref --sort="-*authordate" --format="%(tag) - %(taggerdate:short)%0a%(contents)" refs/tags | less'
 alias gll="git pull"
+function gds {
+  awk '/---/{ FILENAME=$0; next } /'"$1"'/ {{ print FILENAME "\n" $0 } {for(i=1; i<=10; i++) {getline; print}}}' | gr -v '^+'
+}
+function gld {
+  git diff | gds $@
+  git show HEAD | gds $@
+}
 function glc {
   command=$(git show --name-only --oneline HEAD | tail +2 | awk '{print $1}' | cat -n)
   echo $command
@@ -57,7 +64,7 @@ function gcname {
    echo $name
    echo $name | clip_copy
 }
-alias rcop="bundle exec rubocop . -DR"
+alias rcop="bundle exec rubocop -A"
 alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
 alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
 alias jfc="RAILS_ENV=test SKIP_COVERAGE=true bundle exec rake javascript_fixtures:create"
@@ -160,6 +167,7 @@ alias rab="rabbitmq-server"
 alias ttr="touch tmp/restart.txt"
 
 alias unstash="git stash pop"
+alias unstash_reset="git reset --merge"
 alias cuc='bundle exec cucumber'
 
 alias nginx_logs=/usr/local/Cellar/nginx/1.4.4/logs
@@ -212,8 +220,13 @@ function rmu {
 }
 
 function rollback {
-  rake db:rollback STEP=$1
-  RAILS_ENV=test rake db:rollback STEP=$1
+  if [[ -z $1 ]]
+  then
+    echo 'Put number of rollback steps'
+  else
+    rake db:rollback STEP=$1
+    RAILS_ENV=test rake db:rollback STEP=$1
+  fi
 }
 
 function migrate {
@@ -415,8 +428,9 @@ function kill1 {
   kill -9 $pid
 }
 
+# script /tmp/last_tests.txt -c "RAILS_ENV=test bundle exec rspec \"$@\"" # script will save all terminal output to file
 function rt {
-  script /tmp/last_tests.txt -c "RAILS_ENV=test bundle exec rspec $@" # script will save all terminal output to file
+  RAILS_ENV=test bundle exec rspec "$@"
 }
 
 function rtc {
@@ -427,6 +441,16 @@ function rtc {
   echo 'Copied path:'
   echo $failed_tests | awk "NR==$number"
   echo $failed_tests | awk "NR==$number" | ansifilter | clip_copy # ansifilter will remove all formatting like colors, etc
+}
+
+function back {
+  backtraces=$(cat /tmp/last_tests.txt | tail -n 50 | gr -o '\.\/[a-z0-1\/_\.]*')
+  echo $backtraces | cat -n
+  echo 'Which test: '
+  read number
+  echo 'Copied path:'
+  echo $backtraces | awk "NR==$number"
+  echo $backtraces | awk "NR==$number" | ansifilter | clip_copy # ansifilter will remove all formatting like colors, etc
 }
 
 alias gdstat="git diff --stat develop..HEAD"
@@ -553,7 +577,8 @@ export PATH=$PATH:~/android/android-sdk/sdk/tools
 export PATH=$PATH:/usr/local/mysql/bin
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
-export RBENV_ROOT="$HOME/.rbenv"
+export PATH="/media/maks/ubuntu_ssd/.rbenv/bin:$PATH"
+export RBENV_ROOT="/media/maks/ubuntu_ssd/.rbenv"
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD"
@@ -583,9 +608,13 @@ function nef() {
   fi
 }
 
-alias tags="ripper-tags -R * `bundle show --paths`"
+function tags() {
+  ripper-tags -R * `bundle show --paths`
+}
 alias roach="cockroach start-single-node --insecure --host=localhost  --logtostderr"
 alias find_by_port="netstat -vanp tcp | grep 3000"
+
+alias check_ports="sudo lsof -i -P -n | grep LISTEN"
 
 # fixssl="export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/"
 # export LDFLAGS="-L/usr/local/opt/libxml2/lib"
@@ -624,7 +653,7 @@ then
   for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-${i} '[]'; done
 
   alias swap_alt="setxkbmap -option altwin:swap_lalt_lwin"
-  alias fix_copy="autocutsel -fork & autocutsel -selection PRIMARY -fork &"
+  alias fix_copy="autocutsel -fork & autocutsel PRIMARY -fork &"
 fi
 
 # xmodmap -pke to check key list - use tab as Hyper_L

@@ -15,6 +15,8 @@ call plug#begin()
  Plug 'Lokaltog/vim-easymotion'
  Plug 'vim-scripts/YankRing.vim'
  Plug 'tpope/vim-eunuch'
+ Plug 'chaoren/vim-wordmotion'
+
  "Plug 'bkad/CamelCaseMotion'
  "Plug 'Valloric/YouCompleteMe'
  Plug 'neovim/nvim-lspconfig'
@@ -32,9 +34,7 @@ call plug#begin()
  Plug 'vim-ruby/vim-ruby'
  Plug 'tpope/vim-rails'
  Plug 'tpope/vim-rbenv'
- Plug 'tpope/vim-Plugr'
 
- "Plug 'kien/ctrlp.vim'
  Plug 'nvim-treesitter/nvim-treesitter'
  Plug 'nvim-lua/plenary.nvim'
  Plug 'nvim-telescope/telescope.nvim'
@@ -42,11 +42,9 @@ call plug#begin()
  Plug 'mxw/vim-jsx'
 
  Plug 'git@github.com:vim-scripts/cscope.vim.git'
- " Plug 'Shougo/neocomplcache.vim'
 
  Plug 'MarcWeber/vim-addon-mw-utils'
  Plug 'tomtom/tlib_vim'
- " Plug 'honza/vim-snippets'
  " Plug "sirver/ultisnips"
 
  " vim-scripts repos

@@ -136,6 +136,9 @@ require('telescope').setup({
 })
 EOF
 
+"add javascript dir to search path when using `gf` command
+set path+=javascript
+
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {

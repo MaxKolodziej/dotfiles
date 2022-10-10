@@ -82,15 +82,33 @@ nmap <C-_>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-_>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-_>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
+" shift-enter adds END tag
+if !exists( "*EndToken" )
+  function EndToken()
+    let current_line = getline( '.' )
+    let braces_at_end = '{\s*\(|\(,\|\s\|\w\)*|\s*\)\?$'
+    if match( current_line, braces_at_end ) >= 0
+      return '}'
+    else
+      return 'end'
+    endif
+  endfunction
+endif
+
+imap <S-CR> <ESC>:execute 'normal o' . EndToken()<CR>O
+
+
 map <F7> gg=G<C-o><C-o>
 vnoremap <C-k> "ky
 nmap <C-k> "kp
 vnoremap <C-j> "jy
 nmap <C-j> "jp
+
+nnoremap <leader>r Orescue StandardError => e<esc>oputs e.message<esc>oputs e.backtrace<esc>oraise<esc>
 vnoremap <leader>h yOputs(<esc>p$a).inspect<esc>Oputs '----<esc>p$a-----'
 vnoremap <leader>c yOconsole.log(<esc>p$a).inspect<esc>Oconsole.log '----<esc>p$a-----'
-"noremap <leader>hr ^iputs(<esc>A).inspect<esc>
-"noremap <leader>c ^iconsole.log(<esc>A)<esc>
+"nnoremap <leader>h <esc>^iputs(<esc>A).inspect<esc>
+"nnoremap <leader>c ^iconsole.log(<esc>A)<esc>
 "noremap <leader>hm ^v$yko<esc>p^i'----<esc>A----'<esc>
 
 "map <silent> w <Plug>CamelCaseMotion_w
@@ -178,7 +196,12 @@ map <Leader>iv :call IndentV()<cr>
 nnoremap ]r :ALENextWrap<CR>     " move to the next ALE warning / error
 nnoremap [r :ALEPreviousWrap<CR> " move to the previous ALE warning / error
 
+" jump to tag in a new tab
+nmap g<C-]> :execute 'tab tag '.expand('<cword>')<CR>
+
 nmap ff :Telescope find_files<CR>
+nmap fn :execute 'Telescope find_files default_text=' . expand('<cword>')<cr>
+nmap fs :lua require'telescope.builtin'.grep_string{}<CR>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
