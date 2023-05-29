@@ -33,7 +33,9 @@ cockroach-data
 .yardoc
 
 # Foreman environment
-/.env
+.env
+.env.development
+.env.test
 
 # Ignore Netbeans project
 nbproject/

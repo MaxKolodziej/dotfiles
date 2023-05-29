@@ -56,6 +56,8 @@ alias gcp="git cherry-pick"
 alias gcpc="git cherry-pick --continue"
 alias gml="git merge -"
 alias gom="git checkout master"
+alias main="git checkout main"
+alias master="git checkout master"
 alias gdm="git diff --name-only master"
 alias gsl="git stash list"
 # commit name from branch
@@ -505,8 +507,8 @@ function rfix {
 
 function rlfix {
   last_commit=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 1)
-  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | tr '\n' ' ')
-  command="bundle exec rubocop -a $filenames"
+  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | gr '.rb' | tr '\n' ' ')
+  command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
 }
@@ -577,9 +579,9 @@ export PATH=$PATH:~/android/android-sdk/sdk/tools
 export PATH=$PATH:/usr/local/mysql/bin
 export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
-export PATH="/media/maks/ubuntu_ssd/.rbenv/bin:$PATH"
-export RBENV_ROOT="/media/maks/ubuntu_ssd/.rbenv"
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# this is moved to private profile, there are different settings for different machines
+# export PATH="/opt/rbenv/bin:$PATH"
+# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD"
 
@@ -648,6 +650,8 @@ then
   gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-right "['<Super><Shift>l']"
   gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-up "['<Super><Shift>k']"
   gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-down "['<Super><Shift>j']"
+
+  gnome-extensions disable ding@rastersoft.com # to fix focus issue when switching workspaces
 
   for i in $(seq 1 9); do gsettings set org.gnome.shell.extensions.dash-to-dock app-hotkey-${i} '[]'; done
   for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-${i} '[]'; done

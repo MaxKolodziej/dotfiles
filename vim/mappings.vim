@@ -1,7 +1,18 @@
 nnoremap ; :
 imap <C-d> <del>
-"imap <C-f> <Esc>wdiwi
-nmap <Space> i_<Esc>r
+
+nnoremap <Space> <NOP>
+" nnoremap <Space> i_<Esc>r
+function! InsertSingle()
+  sleep 700m|let l:a = getchar(0)
+  if l:a != 0
+    silent! exec "normal i" . nr2char(l:a)
+  else
+    silent! exec "normal i "
+  endif
+endfunction
+nnoremap <silent> <Space> :call InsertSingle()<CR>
+
 map <F2> :mksession! ~/vim_session <cr>
 map <F3> :source ~/vim_session <cr>
 nmap <silent> <C-D> :NERDTreeToggle<CR>
@@ -41,7 +52,7 @@ vmap <C-x> "+c
 vmap <C-v> c<ESC>"+p
 imap <C-v> <C-r><C-o>+
 " paste in command line with CTRL-V
-cmap <C-V> <C-R>*
+cmap <C-V> <C-R>+
 
 map <C-S-h> :execute "tabmove" tabpagenr() - 2 <CR>
 map <C-S-l> :execute "tabmove" tabpagenr() <CR>
@@ -105,7 +116,8 @@ vnoremap <C-j> "jy
 nmap <C-j> "jp
 
 nnoremap <leader>r Orescue StandardError => e<esc>oputs e.message<esc>oputs e.backtrace<esc>oraise<esc>
-vnoremap <leader>h yOputs(<esc>p$a).inspect<esc>Oputs '----<esc>p$a-----'
+vnoremap <leader>h yOputs(<esc>p$a).inspect<esc>Oputs '----<esc>p$a-----'<esc>
+nnoremap <leader>h ^v$yoputs '----<esc>p$a-----'<esc>
 vnoremap <leader>c yOconsole.log(<esc>p$a).inspect<esc>Oconsole.log '----<esc>p$a-----'
 "nnoremap <leader>h <esc>^iputs(<esc>A).inspect<esc>
 "nnoremap <leader>c ^iconsole.log(<esc>A)<esc>
@@ -158,11 +170,6 @@ nnoremap rfs :call RubyFilename(expand('<cword>'),1)<CR><esc>
 " map ma yiw:RunCommandInTerminal('<C-r>"')<CR>
 " vnoremap ma y:RunCommandInTerminal('<C-r>"')<CR>
 
-abbreviate Pj E public/javascripts
-abbreviate Aj E app/assets/javascripts
-abbreviate Ps E public/stylesheets
-abbreviate As E app/assets/stylesheets
-
 let g:EasyMotion_leader_key = ','
 let g:EasyMotion_do_mapping = 1
 let g:EasyMotion_keys = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012347890'
@@ -210,3 +217,16 @@ nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+
+let s:fontsize = 12
+function! AdjustFontSize(amount)
+  let s:fontsize = s:fontsize+a:amount
+  :execute "GuiFont! DejaVu Sans Mono:h" . s:fontsize
+endfunction
+
+noremap <C-ScrollWheelUp> :call AdjustFontSize(1)<CR>
+noremap <C-ScrollWheelDown> :call AdjustFontSize(-1)<CR>
+inoremap <C-ScrollWheelUp> <Esc>:call AdjustFontSize(1)<CR>a
+inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
+noremap <kPlus> :call AdjustFontSize(1)<CR>
+noremap <kMinus> :call AdjustFontSize(-1)<CR>
