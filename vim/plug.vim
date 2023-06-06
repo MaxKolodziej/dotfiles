@@ -7,7 +7,6 @@ call plug#begin()
  " original repos on github
  "Plug 'vim-scripts/lastpos.vim'
  Plug 'https://github.com/itchyny/lightline.vim.git'
- Plug 'scrooloose/nerdtree'
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-surround'
  Plug 'tpope/vim-abolish'

@@ -13,9 +13,11 @@ function! InsertSingle()
 endfunction
 nnoremap <silent> <Space> :call InsertSingle()<CR>
 
+nmap <C-d> vip=
+"imap <C-f> <Esc>wdiwi
+nmap <Space> i_<Esc>r
 map <F2> :mksession! ~/vim_session <cr>
 map <F3> :source ~/vim_session <cr>
-nmap <silent> <C-D> :NERDTreeToggle<CR>
 
 map <S-Enter> O<Esc>j
 map <CR> o<Esc>k

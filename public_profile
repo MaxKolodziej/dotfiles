@@ -107,9 +107,17 @@ function dl {
   alias | grep -i ^d_
   declare +f | gr ^d_
 }
+
 function kl {
   alias | grep -i ^k_
   declare +f | gr ^k_
+}
+
+function run10 {
+  for i in {1..10}; do $@; done
+}
+function run50 {
+  for i in {1..50}; do $@; done
 }
 
 alias rem_lines="sed -e '2,6d'"
@@ -524,7 +532,7 @@ function cn {
 export EDITOR=vim
 
 rc () {
-  bundle exec rails c $@
+  DISABLE_SPRING=true bundle exec rails c $@
 }
 
 rg () {
@@ -659,6 +667,19 @@ then
   alias swap_alt="setxkbmap -option altwin:swap_lalt_lwin"
   alias fix_copy="autocutsel -fork & autocutsel PRIMARY -fork &"
 fi
+
+function m {
+  git show-ref --verify --quiet refs/heads/main
+  if [[ $? == 0 ]]
+  then
+    git checkout main
+  else
+    git checkout master
+  fi
+}
+
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/maks/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+
 
 # xmodmap -pke to check key list - use tab as Hyper_L
 # xmodmap -e "keycode 23 = Hyper_L"
