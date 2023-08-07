@@ -208,9 +208,21 @@ nnoremap [r :ALEPreviousWrap<CR> " move to the previous ALE warning / error
 " jump to tag in a new tab
 nmap g<C-]> :execute 'tab tag '.expand('<cword>')<CR>
 
+function! SearchForClassWithNamespaces()
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][col1 - 1:]
+  let selection = join(lines,'\n')
+  let change = substitute(selection, '::', '/', 'g')
+  execute ":Telescope find_files default_text=".change
+endfunction
+
 nmap ff :Telescope find_files<CR>
 nmap fn :execute 'Telescope find_files default_text=' . expand('<cword>')<cr>
 nmap fs :lua require'telescope.builtin'.grep_string{}<CR>
+vnoremap fn :call SearchForClassWithNamespaces()<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>

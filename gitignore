@@ -20,7 +20,7 @@
 
 config/projections.json
 config/database.yml
-jasmine/.ruby-version
+.ruby-version
 ncscope.out
 public/images/sprites/
 vim/.netrwhist
