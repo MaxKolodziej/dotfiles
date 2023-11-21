@@ -145,16 +145,16 @@ function gl {
   git log --oneline
 }
 function go {
-  git checkout "$@"; update_current_git_vars
+  git checkout "$@"
 }
 function gor {
-  git checkout -t $(git branch -r | grep -i "$@" | tail -1); update_current_git_vars
+  git checkout -t $(git branch -r | grep -i "$@" | tail -1)
 }
 function grh {
-  git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD); update_current_git_vars
+  git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
 }
 function gol {
-  git checkout -; update_current_git_vars
+  git checkout -
 }
 function gf {
   git fetch
@@ -237,6 +237,17 @@ function rollback {
     rake db:rollback STEP=$1
     RAILS_ENV=test rake db:rollback STEP=$1
   fi
+}
+
+function de {
+  echo "Choose docker container - type number"
+  command=$(docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Names}}" | tail -n +2 | cat -n)
+  echo $command
+  read line_number
+
+  container_id=$(echo $command | awk "NR==$line_number" | awk '{print $2}')
+  echo "opening container: $container_id"
+  docker exec -it $container_id /bin/bash
 }
 
 function migrate {
@@ -361,7 +372,6 @@ function vg {
 
 function gs {
   git status --porcelain | cat -n
-  update_current_git_vars #for zsh git prompt
 }
 
 function gsc {
@@ -489,7 +499,7 @@ function gor {
   fi
 }
 
-function gbso {
+function git_recent_branches {
   git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 30
 }
 
@@ -498,12 +508,11 @@ function csleep {
 }
 
 function gon {
-  gbso | head -n 30 | nl
+  git_recent_branches | head -n 30 | nl
   echo 'Which branch: '
   read branch_number
-  branch_name=$(gbso | awk "NR==$branch_number" | tr -d ' ')
+  branch_name=$(git_recent_branches | awk "NR==$branch_number" | tr -d ' ')
   git checkout $branch_name
-  update_current_git_vars # remove if not using zsh-git-prompt
 }
 
 function rfix {

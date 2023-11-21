@@ -130,6 +130,7 @@ endfunction
 lua << EOF
 require('telescope').setup({
   defaults = {
+    file_ignore_patterns = {"coverage", "tmp", "public/uploads"},
     shorten_path = true,
     layout_config = {
       horizontal = { width = 0.98, mirror = false },
