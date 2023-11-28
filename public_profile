@@ -9,6 +9,7 @@ alias ls='ls -lah'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias vim="nvim"
 alias gut='git'
 alias gc="git commit"
 alias gf="git fetch"
@@ -687,6 +688,7 @@ function m {
   fi
 }
 
+set -o vi
 export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/maks/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
 
 
