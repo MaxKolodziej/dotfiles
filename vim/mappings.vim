@@ -1,8 +1,6 @@
 nnoremap ; :
 imap <C-d> <del>
 
-nnoremap <Space> <NOP>
-" nnoremap <Space> i_<Esc>r
 function! InsertSingle()
   sleep 700m|let l:a = getchar(0)
   if l:a != 0
@@ -14,8 +12,6 @@ endfunction
 nnoremap <silent> <Space> :call InsertSingle()<CR>
 
 nmap <C-d> vip=
-"imap <C-f> <Esc>wdiwi
-nmap <Space> i_<Esc>r
 map <F2> :mksession! ~/vim_session <cr>
 map <F3> :source ~/vim_session <cr>
 
@@ -117,7 +113,7 @@ nmap <C-k> "kp
 vnoremap <C-j> "jy
 nmap <C-j> "jp
 
-nnoremap <leader>r Orescue StandardError => e<esc>oputs e.message<esc>oputs e.backtrace<esc>oraise<esc>
+nnoremap <leader>r orescue StandardError => e<esc>oputs e.message<esc>oputs e.backtrace<esc>oraise<esc>
 vnoremap <leader>h yOputs(<esc>p$a).inspect<esc>Oputs '----<esc>p$a-----'<esc>
 nnoremap <leader>h ^v$yoputs '----<esc>p$a-----'<esc>
 vnoremap <leader>c yOconsole.log(<esc>p$a).inspect<esc>Oconsole.log '----<esc>p$a-----'
@@ -148,7 +144,10 @@ command! Mappings E ~/dotfiles/vim/mappings.vim
 command! Keys E ~/dotfiles/vim/mappings.vim
 command! Settings E ~/dotfiles/vim/settings.vim
 command! Manager E ~/dotfiles/vim/plug.vim
+command! Private E ~/.private_profile
+command! Public E ~/.public_profile
 command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
+command! PrettyJson :%!jq .
 command! -nargs=0 Mr RemoveMarkHighlights
 
 function! RubyFilename(selection, spec_file)
@@ -195,7 +194,7 @@ command! -nargs=0 RefreshCode windo e!
 
 nnoremap ca :let @+=expand("%:p")<CR>
 nnoremap cp :let @+=expand("%")<cr>
-nnoremap cl :let @+=expand("%:p") . ':' . line('.')<CR>
+nnoremap cl :let @+=expand("%") . ':' . line('.')<CR>
 
 function IndentV()
   Tabularize /\(\w\+\ze\s\+: \|: \)/l0l1

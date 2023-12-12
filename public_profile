@@ -93,14 +93,22 @@ function d_up {
   if [ -f docker-compose.max.yml ] ; then
     docker-compose -f docker-compose.max.yml up $@
   else
-    docker-compose -f docker-compose.yml up $@
+    if [ -f docker-compose.yml ] ; then
+      docker-compose -f docker-compose.yml up $@
+    else
+      docker-compose -f docker-compose.yaml up $@
+    fi
   fi
 }
 function d_stop {
   if [ -f docker-compose.max.yml ] ; then
     docker-compose -f docker-compose.max.yml stop $@
   else
-    docker-compose -f docker-compose.yml stop $@
+    if [ -f docker-compose.yml ] ; then
+      docker-compose -f docker-compose.yml stop $@
+    else
+      docker-compose -f docker-compose.yaml stop $@
+    fi
   fi
 }
 
@@ -141,6 +149,9 @@ function gsa {
 }
 function gr {
   grep -i "$@"
+}
+function gres {
+  git reset "$@"
 }
 function gl {
   git log --oneline
@@ -517,7 +528,7 @@ function gon {
 }
 
 function rfix {
-  filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | gr '.rb' | tr '\n' ' ')
+  filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | gr "\.rb" | tr '\n' ' ')
   command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
@@ -525,7 +536,7 @@ function rfix {
 
 function rlfix {
   last_commit=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 1)
-  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | gr '.rb' | tr '\n' ' ')
+  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | gr "\.rb" | tr '\n' ' ')
   command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
@@ -539,7 +550,7 @@ function cn {
  curl $1 | cat -n | awk 'NR == n - 1 || NR == n || NR == n + 1' n=$2
 }
 
-export EDITOR=vim
+export EDITOR=nvim
 
 rc () {
   DISABLE_SPRING=true bundle exec rails c $@
