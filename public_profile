@@ -91,23 +91,23 @@ function d_up {
     sleep 1
   fi
   if [ -f docker-compose.max.yml ] ; then
-    docker-compose -f docker-compose.max.yml up $@
+    docker compose -f docker-compose.max.yml up $@
   else
     if [ -f docker-compose.yml ] ; then
-      docker-compose -f docker-compose.yml up $@
+      docker compose -f docker-compose.yml up $@
     else
-      docker-compose -f docker-compose.yaml up $@
+      docker compose -f docker-compose.yaml up $@
     fi
   fi
 }
 function d_stop {
   if [ -f docker-compose.max.yml ] ; then
-    docker-compose -f docker-compose.max.yml stop $@
+    docker compose -f docker-compose.max.yml stop $@
   else
     if [ -f docker-compose.yml ] ; then
-      docker-compose -f docker-compose.yml stop $@
+      docker compose -f docker-compose.yml stop $@
     else
-      docker-compose -f docker-compose.yaml stop $@
+      docker compose -f docker-compose.yaml stop $@
     fi
   fi
 }
