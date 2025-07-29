@@ -1,80 +1,8 @@
 #!/usr/bin/env zsh
 
-alias be="bundle exec"
-alias bi="bundle install"
-
-alias mkdir='mkdir -p'
-alias ls='ls -lah'
-
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias vim="nvim"
-alias gut='git'
-alias gc="git commit"
-alias gf="git fetch"
-alias gb="git branch"
-alias gd="git diff --no-prefix"
-alias gdc="git diff --cached --no-prefix"
-alias ga="git add"
-alias gA="git add -A"
-alias gpb="git pivotal-branch"
-alias gpr="git pull-request"
-alias gm="git merge"
-alias gsh="git push --follow-tags"
-alias gtags='git for-each-ref --sort="-*authordate" --format="%(tag) - %(taggerdate:short)%0a%(contents)" refs/tags | less'
-alias gll="git pull"
-function gds {
-  awk '/---/{ FILENAME=$0; next } /'"$1"'/ {{ print FILENAME "\n" $0 } {for(i=1; i<=10; i++) {getline; print}}}' | gr -v '^+'
-}
-function gld {
-  git diff | gds $@
-  git show HEAD | gds $@
-}
-function glc {
-  command=$(git show --name-only --oneline HEAD | tail +2 | awk '{print $1}' | cat -n)
-  echo $command
-  result=$command
-  if [[ -z $1 ]]
-  then
-    echo 'Put line number'
-  else
-    number=$1
-    line=$(echo $result | awk "\$1 ~ /^$number/" | head -1 | awk '{print $2}' | tr -d " \r\n\t")
-    echo $line | tr -d " \r\n\t"
-    echo "copied to clipboard: "
-    echo $line | tr -d " \r\n\t" | clip_copy
-  fi
-}
-alias gca="git commit --amend"
-alias got="git checkout --theirs ."
-alias goo="git checkout --ours ."
-alias stash="git stash -u"
-alias grm="git rebase master"
-alias grc="git rebase --continue"
-alias grs="git rebase --skip"
-alias gcp="git cherry-pick"
-alias gcpc="git cherry-pick --continue"
-alias gml="git merge -"
-alias gom="git checkout master"
-alias main="git checkout main"
-alias master="git checkout master"
-alias gdm="git diff --name-only master"
-alias gsl="git stash list"
-# commit name from branch
-function gcname {
-   name=$(git rev-parse --abbrev-ref HEAD | sed "s/\//: /g" | sed "s/-/ /g" | sed "s/XCON /XCON-/g")
-   echo $name
-   echo $name | clip_copy
-}
-alias rcop="bundle exec rubocop -A"
-alias ccop="coffeelint -f .coffeelint.json ./**/*.coffee"
-alias slow_postgres_queries="grep 'duration: [0-9]\{3,6\}' | sort -k 6,6 -n | tail -n 20"
-alias jfc="RAILS_ENV=test SKIP_COVERAGE=true bundle exec rake javascript_fixtures:create"
-alias seed="bundle exec rake db:seed"
-alias merged="git log --grep=Merge"
-alias nuget="mono /usr/local/bin/nuget.exe"
-alias rel_locale="bundle exec rails react_on_rails:locale"
+if [ -e $HOME/.zsh_aliases ]; then
+  source $HOME/.zsh_aliases
+fi
 
 alias d_e="docker exec -it"
 alias d_p="docker ps"
@@ -82,21 +10,22 @@ alias d_i="docker images"
 alias d_irm="docker rmi"
 alias d_c="docker container list -a"
 alias d_crm="docker container rm"
-alias d_cp="docker-compose ps"
-alias d_cd="docker-compose down"
-alias d_cu="docker-compose up -d"
+alias d_cp="docker compose ps"
+alias d_cd="docker compose down"
+alias d_cu="docker compose up -d"
+alias d_rebuild="docker compose up -d --no-deps --build"
 function d_up {
   if [[ $@ != *"-d"* ]];then
     echo "You forgot to deamonize?"
     sleep 1
   fi
   if [ -f docker-compose.max.yml ] ; then
-    docker compose -f docker-compose.max.yml up $@
+    docker compose -f docker-compose.max.yml up $@ --remove-orphans
   else
     if [ -f docker-compose.yml ] ; then
-      docker compose -f docker-compose.yml up $@
+      docker compose -f docker-compose.yml up $@ --remove-orphans
     else
-      docker compose -f docker-compose.yaml up $@
+      docker compose -f docker-compose.yaml up $@ --remove-orphans
     fi
   fi
 }
@@ -122,31 +51,10 @@ function kl {
   declare +f | gr ^k_
 }
 
-function run10 {
-  for i in {1..10}; do $@; done
-}
-function run50 {
-  for i in {1..50}; do $@; done
-}
-
-alias rem_lines="sed -e '2,6d'"
-
-alias fix_bundler="rm .bundle/config; bundle install --system"
-
-alias phll="rake phraseapp:pull"
-alias phsh="rake phraseapp:push"
-alias decaf="decaffeinate --allow-invalid-constructors"
-alias ecop='node_modules/.bin/eslint app/assets/javascripts --ext .es6'
-alias retest="@github-script retest this please!"
-alias play="osascript ~/.vim/play_song_in_itunes.applescript play"
-
-function srspec {
-  for i in $(find . -name '*_spec.rb'); do rspec $i; done
-}
-
 function gsa {
   git stash apply stash@{$1}
 }
+unalias gr
 function gr {
   grep -i "$@"
 }
@@ -171,9 +79,6 @@ function gol {
 function gf {
   git fetch
 }
-function ltp {
-  tail -n 200 -f log/test.log | grep 'Processing\|Parameters'
-}
 function psg {
   ps aux | grep -i $1
 }
@@ -181,18 +86,6 @@ function psg {
 function ff {
   find . -name $1
 }
-
-alias mongo="mongod --dbpath=/Users/max/workspace/mongodb"
-alias es="elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml"
-alias tun="sudo tunnels 127.0.0.1:443 127.0.0.1:80"
-alias rab="rabbitmq-server"
-alias ttr="touch tmp/restart.txt"
-
-alias unstash="git stash pop"
-alias unstash_reset="git reset --merge"
-alias cuc='bundle exec cucumber'
-
-alias nginx_logs=/usr/local/Cellar/nginx/1.4.4/logs
 
 function os {
   case "$(uname -s)" in
@@ -233,23 +126,6 @@ alias docker_worker='docker exec -it $(docker-compose ps -q worker) /bin/bash'
 alias docker_rabbit='docker exec -it $(docker-compose ps -q rabbitmq) /bin/bash'
 alias docker_redis='docker exec -it $(docker-compose ps -q redis) /bin/bash'
 
-function rmd {
-  rake db:migrate:down VERSION=$1
-}
-
-function rmu {
-  rake db:migrate:up VERSION=$1
-}
-
-function rollback {
-  if [[ -z $1 ]]
-  then
-    echo 'Put number of rollback steps'
-  else
-    rake db:rollback STEP=$1
-    RAILS_ENV=test rake db:rollback STEP=$1
-  fi
-}
 
 function de {
   echo "Choose docker container - type number"
@@ -262,11 +138,6 @@ function de {
   docker exec -it $container_id /bin/bash
 }
 
-function migrate {
-  rake db:migrate
-  RAILS_ENV=test rake db:migrate
-}
-
 function db_test {
   RAILS_ENV=test bundle exec rake db:drop
   RAILS_ENV=test bundle exec rake db:create db:schema:load
@@ -275,12 +146,6 @@ function db_test {
 function db_dev {
   bundle exec rake db:drop
   bundle exec rake db:create db:schema:load
-}
-
-function gpu {
-  echo "You're going to execute: git push -u origin $(git rev-parse --abbrev-ref HEAD)"
-  sleep 1
-  git push -u origin $(git rev-parse --abbrev-ref HEAD)
 }
 
 function res_spawner {
@@ -317,6 +182,7 @@ function rts {
   bundle exec rails routes | grep -i "$1"
 }
 
+unalias gg
 function gg {
   git grep -i -n $@ | cat -n | cut -c -180
 }
@@ -382,33 +248,6 @@ function vg {
   fi
 }
 
-function gs {
-  git status --porcelain | cat -n
-}
-
-function gsc {
-  command=$(history | grep " gs$" | tail -1 | awk '{print $2,$3,$4,$5}')
-  result=$(eval "$command")
-  if [[ -z $1 ]]
-  then
-    echo 'Put line number'
-  else
-    line=$(echo $result | awk "NR==$1" | awk '{print $3}' | tr -d " \r\n\t")
-    echo $line | tr -d '\n'
-    echo ""
-    echo $line | tr -d '\n' | clip_copy
-  fi
-}
-
-function gso {
-  command=$(history | grep "gs$" | tail -1 | awk '{print $2,$3,$4,$5}')
-  result=$(eval "$command")
-
-  file=$(echo $result | awk "NR==$1" | awk '{print $3}')
-
-  osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
-}
-
 # replace_all '*.sass' . "\+transition-timing-function\((.*)\)$" "transition-timing-function: \1"
 # replace_all '*.rb' . '{:order =>\(.*\)}' '-> { order(\1) }'
 function replace_all {
@@ -450,49 +289,6 @@ function gst {
   fi
 }
 
-function gd {
-  git diff $1
-}
-
-function kill1 {
-  pid=$(ps aux | grep -i "$1" | grep -v 'grep' | awk '{print $2}' | sort | awk 'NR==1')
-  echo "Trying to kill $pid"
-  kill -9 $pid
-}
-
-# script /tmp/last_tests.txt -c "RAILS_ENV=test bundle exec rspec \"$@\"" # script will save all terminal output to file
-function rt {
-  RAILS_ENV=test bundle exec rspec "$@"
-}
-
-function rtc {
-  failed_tests=$(cat /tmp/last_tests.txt | awk -n '/^Failed examples:/{flag=1;next}/Randomized/{flag=0}flag' | awk -v fs="(spec |#)" '{print $2}' | grep -i spec)
-  echo $failed_tests | cat -n
-  echo 'Which test: '
-  read number
-  echo 'Copied path:'
-  echo $failed_tests | awk "NR==$number"
-  echo $failed_tests | awk "NR==$number" | ansifilter | clip_copy # ansifilter will remove all formatting like colors, etc
-}
-
-function back {
-  backtraces=$(cat /tmp/last_tests.txt | tail -n 50 | gr -o '\.\/[a-z0-1\/_\.]*')
-  echo $backtraces | cat -n
-  echo 'Which test: '
-  read number
-  echo 'Copied path:'
-  echo $backtraces | awk "NR==$number"
-  echo $backtraces | awk "NR==$number" | ansifilter | clip_copy # ansifilter will remove all formatting like colors, etc
-}
-
-alias gdstat="git diff --stat develop..HEAD"
-
-alias summer="bundle exec spring stop"
-
-function vdt {
-  git difftool -t vimdiff -y $@
-}
-
 function gor {
   if [[ $1 =~ ".+" ]]
   then
@@ -509,41 +305,6 @@ function gor {
       git checkout $branch
     fi
   fi
-}
-
-function git_recent_branches {
-  git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 30
-}
-
-function csleep {
-  while :; do sleep 28; echo -n ' ' >&2; done &
-}
-
-function gon {
-  git_recent_branches | head -n 30 | nl
-  echo 'Which branch: '
-  read branch_number
-  branch_name=$(git_recent_branches | awk "NR==$branch_number" | tr -d ' ')
-  git checkout $branch_name
-}
-
-function rfix {
-  filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | gr "\.rb" | tr '\n' ' ')
-  command="bundle exec rubocop -A $filenames"
-  echo $command
-  eval $command
-}
-
-function rlfix {
-  last_commit=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 1)
-  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | gr "\.rb" | tr '\n' ' ')
-  command="bundle exec rubocop -A $filenames"
-  echo $command
-  eval $command
-}
-
-function ip6 {
-  echo "684D:1111:222:3333:4444:5555:6:77" | clip_copy
 }
 
 function cn {
@@ -604,9 +365,12 @@ extract () {
     fi
 }
 
+ghssh () {
+  gh codespace ssh
+}
+
+export PATH=$PATH:~/.dotnet
 export PATH=$PATH:~/android/android-sdk/sdk/tools
-export PATH=$PATH:/usr/local/mysql/bin
-export DYLD_LIBRARY_PATH=/usr/local/mysql/lib:$DYLD_LIBRARY_PATH
 
 # this is moved to private profile, there are different settings for different machines
 # export PATH="/opt/rbenv/bin:$PATH"
@@ -616,8 +380,6 @@ alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git 
 
 alias fixdbtest="RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
 alias fixdbdev="RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
-alias vimup="let i=1 | g/,\d\+)/s//\=','.i.')'/ | let i=i+1"
-alias scalafmt="sbt scalafmt"
 
 myos=$(os)
 if [[ $myos == "OSX" ]]
@@ -642,9 +404,7 @@ function nef() {
 function tags() {
   ripper-tags -R * `bundle show --paths`
 }
-alias roach="cockroach start-single-node --insecure --host=localhost  --logtostderr"
 alias find_by_port="netstat -vanp tcp | grep 3000"
-
 alias check_ports="sudo lsof -i -P -n | grep LISTEN"
 
 # fixssl="export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/"

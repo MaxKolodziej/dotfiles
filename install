@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+if [ $CODESPACES ]
+then
+  sudo apt-get update
+  sudo apt-get install -y neovim
+  sudo apt-get install -y ripgrep
+  sudo apt-get install -y fd-find
+
+  mkdir -p $HOME/.config/nvim
+  cp -r nvim/* $HOME/.config/nvim/.
+  cp -r vim/* $HOME/.config/nvim/
+
+  cp zsh_aliases $HOME/.zsh_aliases
+
+  echo "" >> ~/.zshrc
+  echo "if [ -e $HOME/.zsh_aliases ]; then" >> ~/.zshrc
+  echo "    source $HOME/.zsh_aliases" >> ~/.zshrc
+  echo "fi" >> ~/.zshrc
+
+  echo "" >> ~/.bashrc
+  echo "zsh" >> ~/.bashrc
+else
+  sudo apt-get update
+  sudo apt-get install -y neovim
+
+  mkdir -p $HOME/.config/nvim
+  cp -r vim/* $HOME/.config/nvim/.
+
+  if [ ! -d "$HOME/.config/nvim/plugged/" ]; then
+    nvim +'PlugInstall --sync' +qall
+  fi
+fi

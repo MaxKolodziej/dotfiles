@@ -169,3 +169,4 @@ let g:lightline = {
       \   'tabline': 1
       \  },
     \  }
+colorscheme koehler

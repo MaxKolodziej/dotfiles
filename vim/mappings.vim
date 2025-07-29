@@ -159,7 +159,7 @@ function! RubyFilename(selection, spec_file)
 
   let search_for = '\(\<\u\l\+\|\l\+\)\(\u\)'
   let replace_with = '\l\1_\l\2'
-  let file_name = substitute(a:selection, search_for, replace_with, "g")
+  let file_name = tolower(substitute(a:selection, search_for, replace_with, "g"))
   let full_name = file_name . file_extension
   echom l:full_name
   execute 'Rename' l:full_name

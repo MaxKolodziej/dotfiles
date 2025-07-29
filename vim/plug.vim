@@ -40,7 +40,7 @@ call plug#begin()
  Plug 'othree/yajs.vim'
  Plug 'mxw/vim-jsx'
 
- Plug 'git@github.com:vim-scripts/cscope.vim.git'
+" Plug 'git@github.com:vim-scripts/cscope.vim.git'
 
  Plug 'MarcWeber/vim-addon-mw-utils'
  Plug 'tomtom/tlib_vim'
