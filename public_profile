@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-if [ -e $HOME/.zsh_aliases ]; then
-  source $HOME/.zsh_aliases
+if [ -e $HOME/.bash_aliases ]; then
+  source $HOME/.bash_aliases
 fi
 
 alias d_e="docker exec -it"
@@ -53,31 +53,6 @@ function kl {
 
 function gsa {
   git stash apply stash@{$1}
-}
-unalias gr
-function gr {
-  grep -i "$@"
-}
-function gres {
-  git reset "$@"
-}
-function gl {
-  git log --oneline
-}
-function go {
-  git checkout "$@"
-}
-function gor {
-  git checkout -t $(git branch -r | grep -i "$@" | tail -1)
-}
-function grh {
-  git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
-}
-function gol {
-  git checkout -
-}
-function gf {
-  git fetch
 }
 function psg {
   ps aux | grep -i $1
@@ -180,11 +155,6 @@ function cf {
 
 function rts {
   bundle exec rails routes | grep -i "$1"
-}
-
-unalias gg
-function gg {
-  git grep -i -n $@ | cat -n | cut -c -180
 }
 
 function ggf {

@@ -6,20 +6,18 @@ then
   sudo apt-get install -y neovim
   sudo apt-get install -y ripgrep
   sudo apt-get install -y fd-find
+  sudo apt-get install -y tig
 
   mkdir -p $HOME/.config/nvim
   cp -r nvim/* $HOME/.config/nvim/.
   cp -r vim/* $HOME/.config/nvim/
 
-  cp zsh_aliases $HOME/.zsh_aliases
-
-  echo "" >> ~/.zshrc
-  echo "if [ -e $HOME/.zsh_aliases ]; then" >> ~/.zshrc
-  echo "    source $HOME/.zsh_aliases" >> ~/.zshrc
-  echo "fi" >> ~/.zshrc
+  cp bash_aliases $HOME/.bash_aliases
 
   echo "" >> ~/.bashrc
-  echo "zsh" >> ~/.bashrc
+  echo "if [ -e $HOME/.bash_aliases ]; then" >> ~/.bashrc
+  echo "    source $HOME/.bash_aliases" >> ~/.bashrc
+  echo "fi" >> ~/.bashrc
 else
   sudo apt-get update
   sudo apt-get install -y neovim

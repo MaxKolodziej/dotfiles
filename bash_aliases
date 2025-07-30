@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 alias be="bundle exec"
 alias bi="bundle install"
 alias ls='ls -la'
@@ -20,20 +22,32 @@ alias gm="git merge"
 alias gsh="git push --follow-tags"
 alias gtags='git for-each-ref --sort="-*authordate" --format="%(tag) - %(taggerdate:short)%0a%(contents)" refs/tags | less'
 alias gll="git pull"
-function gds {
+alias go="git checkout"
+alias gr="grep -i"
+alias gres="git reset"
+alias gl="git log --oneline"
+gor() {
+  git checkout -t $(git branch -r | grep -i "$@" | tail -1)
+}
+grh() {
+  git fetch; git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
+}
+gg() {
+  git grep -i -n $@ | cat -n | cut -c -180
+}
+gds() {
   awk '/---/{ FILENAME=$0; next } /'"$1"'/ {{ print FILENAME "\n" $0 } {for(i=1; i<=10; i++) {getline; print}}}' | grep -v '^+'
 }
-unalias gpu
-function gpu {
+gpu() {
   echo "You're going to execute: git push -u origin $(git rev-parse --abbrev-ref HEAD)"
   sleep 1
   git push -u origin $(git rev-parse --abbrev-ref HEAD)
 }
-function gld {
+gld() {
   git diff | gds $@
   git show HEAD | gds $@
 }
-function glc {
+glc() {
   command=$(git show --name-only --oneline HEAD | tail +2 | awk '{print $1}' | cat -n)
   echo $command
   result=$command
@@ -55,7 +69,7 @@ alias gsl="git stash list"
 
 alias gs="git status --porcelain | cat -n"
 
-function gsc {
+gsc() {
   command=$(history | grep " gs$" | tail -1 | awk '{print $2,$3,$4,$5}')
   result=$(eval "$command")
   if [[ -z $1 ]]
@@ -69,19 +83,14 @@ function gsc {
   fi
 }
 
-function rt {
-  RAILS_ENV=test bundle exec rspec "$@"
-}
+alias rt="RAILS_ENV=test bundle exec rspec"
+alias mt="RAILS_ENV=test bundle exec rails test"
 
-function mt {
-  RAILS_ENV=test bundle exec rails test "$@"
-}
-
-function git_recent_branches {
+git_recent_branches() {
   git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 30
 }
 
-function gon {
+gon() {
   git_recent_branches | head -n 30 | nl
   echo 'Which branch: '
   read branch_number
@@ -89,14 +98,14 @@ function gon {
   git checkout $branch_name
 }
 
-function rfix {
+rfix() {
   filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
   command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
 }
 
-function rlfix {
+rlfix() {
   last_commit=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 1)
   filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
   command="bundle exec rubocop -A $filenames"
@@ -104,8 +113,7 @@ function rlfix {
   eval $command
 }
 
-# commit name from branch
-function gcname {
+gcname() {
   name=$(git rev-parse --abbrev-ref HEAD | sed -E "s/(\-)([0-9]+)/(#\2):/" | sed "s/-/ /g" | sed "s/\(feat\|chore\|fix\)\///g")
   echo $name
   echo $name | clip_copy
@@ -113,19 +121,19 @@ function gcname {
 alias rcop="bundle exec rubocop -A"
 alias seed="bundle exec rake db:seed"
 
-function migrate {
+migrate() {
   rake db:migrate
   RAILS_ENV=test rake db:migrate
 }
-function rmd {
+rmd() {
   rake db:migrate:down VERSION=$1
 }
 
-function rmu {
+rmu() {
   rake db:migrate:up VERSION=$1
 }
 
-function rollback {
+rollback() {
   if [[ -z $1 ]]
   then
     echo 'Put number of rollback steps'
@@ -135,9 +143,11 @@ function rollback {
   fi
 }
 
-function run10 {
+run10() {
   for i in {1..10}; do $@; done
 }
-function run50 {
+run50() {
   for i in {1..50}; do $@; done
 }
+
+set -o vi
