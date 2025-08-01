@@ -18,6 +18,8 @@ then
   echo "if [ -e $HOME/.bash_aliases ]; then" >> ~/.bashrc
   echo "    source $HOME/.bash_aliases" >> ~/.bashrc
   echo "fi" >> ~/.bashrc
+
+  echo "set editing-mode vi" >> ~/.inputrc
 else
   sudo apt-get update
   sudo apt-get install -y neovim

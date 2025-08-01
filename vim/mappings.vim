@@ -148,6 +148,7 @@ command! Private E ~/.private_profile
 command! Public E ~/.public_profile
 command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
 command! PrettyJson :%!jq .
+vnoremap <C-o> :'<,'>:!jq<CR>
 command! -nargs=0 Mr RemoveMarkHighlights
 
 function! RubyFilename(selection, spec_file)
