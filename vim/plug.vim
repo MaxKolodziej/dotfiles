@@ -1,11 +1,5 @@
 call plug#begin()
 
- " let Vundle manage Vundle
- " required! 
- " My Plugs here:
- "
- " original repos on github
- "Plug 'vim-scripts/lastpos.vim'
  Plug 'https://github.com/itchyny/lightline.vim.git'
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-surround'
@@ -16,8 +10,6 @@ call plug#begin()
  Plug 'tpope/vim-eunuch'
  Plug 'chaoren/vim-wordmotion'
 
- "Plug 'bkad/CamelCaseMotion'
- "Plug 'Valloric/YouCompleteMe'
  Plug 'neovim/nvim-lspconfig'
  Plug 'hrsh7th/cmp-nvim-lsp'
  Plug 'hrsh7th/cmp-buffer'
@@ -40,10 +32,25 @@ call plug#begin()
  Plug 'othree/yajs.vim'
  Plug 'mxw/vim-jsx'
 
-" Plug 'git@github.com:vim-scripts/cscope.vim.git'
+ Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+Plug 'junegunn/fzf'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 
  Plug 'MarcWeber/vim-addon-mw-utils'
  Plug 'tomtom/tlib_vim'
+
+ Plug 'rcarriga/nvim-notify'
+ Plug 'epwalsh/pomo.nvim'
  " Plug "sirver/ultisnips"
 
  " vim-scripts repos
