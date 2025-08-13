@@ -7,3 +7,5 @@
  source ~/.config/nvim/settings.vim
 
  source ~/.config/nvim/mappings.vim
+
+ source ~/.config/nvim/lua_config.lua

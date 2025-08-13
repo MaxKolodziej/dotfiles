@@ -12,6 +12,8 @@ then
   cp -r nvim/* $HOME/.config/nvim/.
   cp -r vim/* $HOME/.config/nvim/
 
+  nvim +PlugInstall +qall
+
   cp bash_aliases $HOME/.bash_aliases
 
   echo "" >> ~/.bashrc

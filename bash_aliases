@@ -103,6 +103,10 @@ rfix() {
   command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
+
+  command="./node_modules/.bin/prettier --write $filenames"
+  echo $command
+  eval $command
 }
 
 rlfix() {
