@@ -105,7 +105,9 @@ let g:ale_fix_on_save = 0
 let g:ale_javascript_prettier_options=" --list-different 'javascript/bundles/**/*.{js,es6,jsx,scss}'; prettier --list-different 'spec/javascript/components/**/*.{js,jsx}'"
 let g:ale_javascript_eslint_options=" -c .eslintrc --ext js,jsx"
 
-set spell spelllang=en_us
+if !exists('g:vscode')
+  set spell spelllang=en_us
+endif
 
 set shortmess=a
 set cmdheight=2
@@ -130,7 +132,7 @@ endfunction
 lua << EOF
 require('telescope').setup({
   defaults = {
-    file_ignore_patterns = {"coverage", "tmp", "public/uploads"},
+    file_ignore_patterns = {"coverage/", "tmp/", "public/uploads"},
     shorten_path = true,
     layout_config = {
       horizontal = { width = 0.98, mirror = false },
@@ -170,3 +172,15 @@ let g:lightline = {
       \  },
     \  }
 colorscheme koehler
+
+let g:LanguageClient_serverCommands = {
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ }
+" note that if you are using Plug mapping you should not use `noremap` mappings.
+nmap <F5> <Plug>(lcn-menu)
+" Or map each action separately
+nmap <silent>K <Plug>(lcn-hover)
+nmap <silent> gd <Plug>(lcn-definition)
+nmap <silent> <F2> <Plug>(lcn-rename)
+
+let g:deoplete#enable_at_startup = 1

@@ -12,8 +12,8 @@ endfunction
 nnoremap <silent> <Space> :call InsertSingle()<CR>
 
 nmap <C-d> vip=
-map <F2> :mksession! ~/vim_session <cr>
-map <F3> :source ~/vim_session <cr>
+"map <F2> :mksession! ~/vim_session <cr>
+"map <F3> :source ~/vim_session <cr>
 
 map <S-Enter> O<Esc>j
 map <CR> o<Esc>k
