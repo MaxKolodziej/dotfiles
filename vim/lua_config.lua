@@ -37,3 +37,29 @@ require("pomo").setup({
     },
   },
 })
+vim.lsp.enable('ruby_lsp')
+vim.keymap.set("n", "<F2>", vim.lsp.buf.rename)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+vim.keymap.set('n', 'gD', function()
+        local org_path = vim.api.nvim_buf_get_name(0)
+
+        -- Go to definition:
+        vim.api.nvim_command('normal gd')
+
+        -- Wait LSP server response
+        vim.wait(100, function() end)
+
+        local new_path = vim.api.nvim_buf_get_name(0)
+        if not (org_path == new_path) then
+            -- Create a new tab for the original file
+            vim.api.nvim_command('0tabnew %')
+
+            -- Restore the cursor position
+            vim.api.nvim_command('b ' .. org_path)
+            vim.api.nvim_command('normal! `"')
+
+            -- Switch to the original tab
+            vim.api.nvim_command('normal! gt')
+        end
+    end, bufopts)
+

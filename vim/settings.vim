@@ -173,14 +173,16 @@ let g:lightline = {
     \  }
 colorscheme koehler
 
-let g:LanguageClient_serverCommands = {
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ }
+" settings for lsp LanguageClient-neovim , remove after some time
+" let g:LanguageClient_serverCommands = {
+"     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+"     \ }
 " note that if you are using Plug mapping you should not use `noremap` mappings.
-nmap <F5> <Plug>(lcn-menu)
-" Or map each action separately
-nmap <silent>K <Plug>(lcn-hover)
-nmap <silent> gd <Plug>(lcn-definition)
-nmap <silent> <F2> <Plug>(lcn-rename)
+" nmap <F5> <Plug>(lcn-menu)
+" " Or map each action separately
+" nmap <silent>K <Plug>(lcn-hover)
+" nmap <silent> gd <Plug>(lcn-definition)
+" nmap <silent> <F2> <Plug>(lcn-rename)
+" nnoremap gD <cmd>tab split \| lua vim.lsp.buf.definition()<cr>
 
 let g:deoplete#enable_at_startup = 1

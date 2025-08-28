@@ -32,11 +32,7 @@ call plug#begin()
  Plug 'othree/yajs.vim'
  Plug 'mxw/vim-jsx'
 
- Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-Plug 'junegunn/fzf'
+ Plug 'junegunn/fzf'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
