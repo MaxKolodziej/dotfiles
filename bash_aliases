@@ -98,13 +98,28 @@ gon() {
   git checkout $branch_name
 }
 
+rfixall() {
+  command="bundle exec rubocop -A"
+  echo $command
+  eval $command
+
+  command="./node_modules/.bin/prettier --write ."
+  echo $command
+  eval $command
+}
+
 rfix() {
   filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
   command="bundle exec rubocop -A $filenames"
   echo $command
   eval $command
 
-  command="./node_modules/.bin/prettier --write $filenames"
+  if [ -z "${filenames}" ];
+  then
+    command="./node_modules/.bin/prettier --write ."
+  else
+    command="./node_modules/.bin/prettier --write $filenames"
+  fi
   echo $command
   eval $command
 }

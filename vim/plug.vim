@@ -1,6 +1,7 @@
 call plug#begin()
 
- Plug 'https://github.com/itchyny/lightline.vim.git'
+ Plug 'nvim-lualine/lualine.nvim'
+ Plug 'nvim-tree/nvim-web-devicons'
  Plug 'tpope/vim-fugitive'
  Plug 'tpope/vim-surround'
  Plug 'tpope/vim-abolish'
@@ -32,11 +33,7 @@ call plug#begin()
  Plug 'othree/yajs.vim'
  Plug 'mxw/vim-jsx'
 
- Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-Plug 'junegunn/fzf'
+ Plug 'junegunn/fzf'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -51,6 +48,7 @@ endif
 
  Plug 'rcarriga/nvim-notify'
  Plug 'epwalsh/pomo.nvim'
+
  " Plug "sirver/ultisnips"
 
  " vim-scripts repos
