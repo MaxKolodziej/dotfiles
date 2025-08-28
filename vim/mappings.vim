@@ -143,6 +143,7 @@ command! -nargs=1 Term let g:vim_terminal=<args>
 command! Mappings E ~/dotfiles/vim/mappings.vim
 command! Keys E ~/dotfiles/vim/mappings.vim
 command! Settings E ~/dotfiles/vim/settings.vim
+command! LuaConf E ~/dotfiles/vim/lua_config.lua
 command! Manager E ~/dotfiles/vim/plug.vim
 command! Private E ~/.private_profile
 command! Public E ~/.public_profile

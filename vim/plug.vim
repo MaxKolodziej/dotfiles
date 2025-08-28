@@ -32,11 +32,7 @@ call plug#begin()
  Plug 'othree/yajs.vim'
  Plug 'mxw/vim-jsx'
 
- Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-Plug 'junegunn/fzf'
+ Plug 'junegunn/fzf'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -51,6 +47,10 @@ endif
 
  Plug 'rcarriga/nvim-notify'
  Plug 'epwalsh/pomo.nvim'
+ Plug 'L3MON4D3/LuaSnip', {'tag': 'v2.4', 'do': 'make install_jsregexp'}
+ Plug 'saadparwaiz1/cmp_luasnip'
+ Plug 'rafamadriz/friendly-snippets'
+
  " Plug "sirver/ultisnips"
 
  " vim-scripts repos
