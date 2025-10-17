@@ -123,6 +123,8 @@ function db_dev {
   bundle exec rake db:create db:schema:load
 }
 
+# ActiveRecord::Base.connection.execute('select * from schema_migrations').map { |r| r['version'] }
+
 function res_spawner {
   job_runs=$(ps aux | grep -i "delayed_job" | grep -v grep | wc -l)
   if [[ $job_runs -eq 0 ]]
@@ -341,6 +343,7 @@ ghssh () {
 
 export PATH=$PATH:~/.dotnet
 export PATH=$PATH:~/android/android-sdk/sdk/tools
+export PATH=$PATH:~/.local/bin
 
 # this is moved to private profile, there are different settings for different machines
 # export PATH="/opt/rbenv/bin:$PATH"

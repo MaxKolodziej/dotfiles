@@ -144,6 +144,9 @@ migrate() {
   rake db:migrate
   RAILS_ENV=test rake db:migrate
 }
+tmigrate() {
+  RAILS_ENV=test rake db:migrate
+}
 rmd() {
   rake db:migrate:down VERSION=$1
 }

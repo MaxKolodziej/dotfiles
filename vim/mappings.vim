@@ -113,10 +113,11 @@ nmap <C-k> "kp
 vnoremap <C-j> "jy
 nmap <C-j> "jp
 
+nnoremap <leader>c ocase<esc>owhen<esc>owhen<esc>oelse<esc>oend<esc>
+nnoremap <leader>p oputs "#{} #{}"<esc>
 nnoremap <leader>r orescue StandardError => e<esc>oputs e.message<esc>oputs e.backtrace<esc>oraise<esc>
 vnoremap <leader>h yOputs(<esc>p$a).inspect<esc>Oputs '----<esc>p$a-----'<esc>
 nnoremap <leader>h ^v$yoputs '----<esc>p$a-----'<esc>
-vnoremap <leader>c yOconsole.log(<esc>p$a).inspect<esc>Oconsole.log '----<esc>p$a-----'
 "nnoremap <leader>h <esc>^iputs(<esc>A).inspect<esc>
 "nnoremap <leader>c ^iconsole.log(<esc>A)<esc>
 "noremap <leader>hm ^v$yko<esc>p^i'----<esc>A----'<esc>
@@ -150,6 +151,7 @@ command! Public E ~/.public_profile
 command! Scripts tab new ~/scripts.txt <bar> set ft=txtfmt
 command! PrettyJson :%!jq .
 vnoremap <C-o> :'<,'>:!jq<CR>
+vnoremap <C-x> :'<,'>!xmllint --format -<CR>
 command! -nargs=0 Mr RemoveMarkHighlights
 
 function! RubyFilename(selection, spec_file)
