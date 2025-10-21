@@ -143,7 +143,7 @@ require('lualine').setup {
     }
   },
   sections = {
-    lualine_a = {'mode'},
+    lualine_a = {},
     lualine_b = {
       {
         'filename',
@@ -170,8 +170,7 @@ require('lualine').setup {
         end
 
         return tostring(timer) .. " |"
-      end,
-      'progress'
+      end
     },
     lualine_z = {'location'}
   },

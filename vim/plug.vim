@@ -47,7 +47,7 @@ endif
  Plug 'tomtom/tlib_vim'
 
  Plug 'rcarriga/nvim-notify'
- Plug 'epwalsh/pomo.nvim'
+ Plug 'https://github.com/A-raj468/pomo.nvim.git'
 
  " Plug "sirver/ultisnips"
 

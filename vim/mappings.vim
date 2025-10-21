@@ -224,7 +224,7 @@ function! SearchForClassWithNamespaces()
 endfunction
 
 nmap ff :Telescope find_files<CR>
-nmap fn :execute 'Telescope find_files default_text=' . expand('<cword>')<cr>
+nmap fn :execute 'Telescope find_files default_text=' . substitute(expand('<cword>'), '_', '', 'g')<cr>
 nmap fs :lua require'telescope.builtin'.grep_string{}<CR>
 vnoremap fn :call SearchForClassWithNamespaces()<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
