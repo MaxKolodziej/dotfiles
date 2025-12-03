@@ -187,3 +187,16 @@ require('lualine').setup {
   inactive_winbar = {},
   extensions = {}
 }
+
+vim.lsp.config('ruby_lsp', {
+  init_options = {
+    formatter = 'standard',
+    linters = { 'standard' },
+    addonSettings = {
+      ["Ruby LSP Rails"] = {
+        enablePendingMigrationsPrompt = false
+      }
+    }
+  }
+})
+vim.lsp.enable("ruby_lsp")

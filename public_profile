@@ -297,6 +297,11 @@ rs () {
   bundle exec rails s $@
 }
 
+# for mac apple m5
+rsm () {
+  OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec rails s
+}
+
 alias ych="yarn run check"
 
 ys () {

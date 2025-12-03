@@ -10,7 +10,6 @@ then
 
   mkdir -p $HOME/.config/nvim
   cp -r nvim/* $HOME/.config/nvim/.
-  cp -r vim/* $HOME/.config/nvim/
 
   cp bash_aliases $HOME/.bash_aliases
 
@@ -23,9 +22,21 @@ then
 else
   sudo apt-get update
   sudo apt-get install -y neovim
+  sudo apt-get install -y ripgrep
+  sudo apt-get install -y fd-find
+  sudo apt-get install -y tig
 
   mkdir -p $HOME/.config/nvim
-  cp -r vim/* $HOME/.config/nvim/.
+  cp -r nvim/* $HOME/.config/nvim/.
+
+  cp bash_aliases $HOME/.bash_aliases
+
+  echo "" >> ~/.bashrc
+  echo "if [ -e $HOME/.bash_aliases ]; then" >> ~/.bashrc
+  echo "    source $HOME/.bash_aliases" >> ~/.bashrc
+  echo "fi" >> ~/.bashrc
+
+  echo "set editing-mode vi" >> ~/.inputrc
 
   if [ ! -d "$HOME/.config/nvim/plugged/" ]; then
     nvim +'PlugInstall --sync' +qall

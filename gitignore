@@ -33,6 +33,7 @@ cockroach-data
 
 # Foreman environment
 .env
+.env.production
 .env.development
 .env.test
 

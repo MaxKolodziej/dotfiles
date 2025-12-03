@@ -2,6 +2,11 @@
 
  set laststatus=2
 
+ if exists(':GuiFont')
+ " Use GuiFont! to ignore font errors
+   set guifont=Monaco:h16
+ endif
+
  source ~/.config/nvim/plug.vim
 
  source ~/.config/nvim/settings.vim
