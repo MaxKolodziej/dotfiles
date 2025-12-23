@@ -147,12 +147,14 @@ migrate() {
 tmigrate() {
   RAILS_ENV=test rake db:migrate
 }
-rmd() {
-  rake db:migrate:down VERSION=$1
+exnum() {
+  echo $1 | grep -o -E "[0-9]+"
 }
-
-rmu() {
-  rake db:migrate:up VERSION=$1
+rmd() {
+  version=$(exnum $1)
+  echo "reverting:"
+  echo $version
+  rake db:migrate:down:primary VERSION=$version
 }
 
 rollback() {
@@ -160,8 +162,8 @@ rollback() {
   then
     echo 'Put number of rollback steps'
   else
-    rake db:rollback STEP=$1
-    RAILS_ENV=test rake db:rollback STEP=$1
+    rake db:rollback:primary STEP=$1
+    RAILS_ENV=test rake db:rollback:primary STEP=$1
   fi
 }
 

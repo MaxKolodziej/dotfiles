@@ -1,5 +1,27 @@
 #!/usr/bin/env zsh
 
+function os {
+  case "$(uname -s)" in
+
+   Darwin)
+     echo 'OSX'
+     ;;
+
+   Linux)
+     echo 'Linux'
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     echo 'MS Windows'
+     ;;
+
+   *)
+     echo 'Other OS'
+     ;;
+ esac
+}
+myos=$(os)
+
 if [ -e $HOME/.bash_aliases ]; then
   source $HOME/.bash_aliases
 fi
@@ -60,27 +82,6 @@ function psg {
 
 function ff {
   find . -name $1
-}
-
-function os {
-  case "$(uname -s)" in
-
-   Darwin)
-     echo 'OSX'
-     ;;
-
-   Linux)
-     echo 'Linux'
-     ;;
-
-   CYGWIN*|MINGW32*|MSYS*|MINGW*)
-     echo 'MS Windows'
-     ;;
-
-   *)
-     echo 'Other OS'
-     ;;
- esac
 }
 
 function clip_copy {
@@ -285,29 +286,34 @@ function cn {
 
 export EDITOR=nvim
 
-rc () {
+rc() {
   DISABLE_SPRING=true bundle exec rails c $@
 }
 
-rg () {
+rg() {
   bundle exec rails g $@
 }
 
-rs () {
-  bundle exec rails s $@
+rs() {
+  if [[ $myos == "OSX" ]]
+  then
+    OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec rails s $@
+  else
+    bundle exec rails s $@
+  fi
 }
 
 # for mac apple m5
-rsm () {
+rsm() {
   OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec rails s
 }
 
 alias ych="yarn run check"
 
-ys () {
+ys() {
   yarn run start $1
 }
-yt () {
+yt() {
   yarn run test $@
 }
 
@@ -354,12 +360,13 @@ export PATH=$PATH:~/.local/bin
 # export PATH="/opt/rbenv/bin:$PATH"
 # if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
-alias show-changelog="git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD"
+function show-changelog() {
+  git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD
+}
 
 alias fixdbtest="RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
 alias fixdbdev="RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
 
-myos=$(os)
 if [[ $myos == "OSX" ]]
   then
     export PATH="$(brew --prefix qt)/bin:$PATH"
