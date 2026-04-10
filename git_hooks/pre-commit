@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+hits = []
+
+checks = {
+  '\.rb$' => ['binding\.pry', 'should'],
+  '\.haml' => ['binding\.pry', 'should']
+}
+
+# Find the names of all the filenames that have been (A)dded (C)opied or (M)odified
+filenames = `git diff --cached --name-only --diff-filter=ACM`.split("\n")
+
+filenames.each do |filename|
+  # Perform special checks for _spec filenames (rspec tests)
+  checks.each do |filename_pattern, patterns|
+    if filename.match filename_pattern
+      patterns.each do |contents_pattern|
+        results = `git diff --cached #{filename} | grep "^\+[^+]" | grep "#{contents_pattern}"`.split("\n").map { |r| r.sub(/^\+[\s\t]*/, '') }
+        if $? == 0
+          # Add the relevant change with line number to the hits array
+          results.each do |r|
+            hits.push "#{filename}:" + `grep -n '#{r}' #{filename}`.sub(/:\s+/, ' ').chomp
+          end
+        end
+      end
+    end
+  end
+end
+
+if hits.any?
+  puts "\e[33m>>> Please remove the following problems from these files before committing\e[0m"
+  puts hits.join("\n")
+end
+
+exit 1 if hits.any?

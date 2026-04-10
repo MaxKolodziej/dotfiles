@@ -1,0 +1,461 @@
+#!/usr/bin/env zsh
+
+function os {
+  case "$(uname -s)" in
+
+   Darwin)
+     echo 'OSX'
+     ;;
+
+   Linux)
+     echo 'Linux'
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     echo 'MS Windows'
+     ;;
+
+   *)
+     echo 'Other OS'
+     ;;
+ esac
+}
+myos=$(os)
+
+if [ -e $HOME/.bash_aliases ]; then
+  source $HOME/.bash_aliases
+fi
+
+alias d_e="docker exec -it"
+alias d_p="docker ps"
+alias d_i="docker images"
+alias d_irm="docker rmi"
+alias d_c="docker container list -a"
+alias d_crm="docker container rm"
+alias d_cp="docker compose ps"
+alias d_cd="docker compose down"
+alias d_cu="docker compose up -d"
+alias d_rebuild="docker compose up -d --no-deps --build"
+function d_up {
+  if [[ $@ != *"-d"* ]];then
+    echo "You forgot to deamonize?"
+    sleep 1
+  fi
+  if [ -f docker-compose.max.yml ] ; then
+    docker compose -f docker-compose.max.yml up $@ --remove-orphans
+  else
+    if [ -f docker-compose.yml ] ; then
+      docker compose -f docker-compose.yml up $@ --remove-orphans
+    else
+      docker compose -f docker-compose.yaml up $@ --remove-orphans
+    fi
+  fi
+}
+function d_stop {
+  if [ -f docker-compose.max.yml ] ; then
+    docker compose -f docker-compose.max.yml stop $@
+  else
+    if [ -f docker-compose.yml ] ; then
+      docker compose -f docker-compose.yml stop $@
+    else
+      docker compose -f docker-compose.yaml stop $@
+    fi
+  fi
+}
+
+function tmuxr {
+  tmux source-file ~/.tmux.conf
+}
+
+function dl {
+  alias | grep -i ^d_
+  declare +f | gr ^d_
+}
+
+function kl {
+  alias | grep -i ^k_
+  declare +f | gr ^k_
+}
+
+function gsa {
+  git stash apply stash@{$1}
+}
+function psg {
+  ps aux | grep -i $1
+}
+
+function ff {
+  find . -name $1
+}
+
+function clip_copy {
+  read text
+  myos=$(os)
+  if [[ $myos == "Linux" ]]
+  then
+    echo $text | tr -d '[:cntrl:]' | xclip -selection clipboard # tr will remove colors and new lines ^M
+  else
+    echo $text | tr -d '[:cntrl:]' | pbcopy
+  fi
+}
+
+alias plant="DISPLAY=:0 java -jar plantuml.jar -gui"
+
+alias pb2haml='pbpaste | html2haml | pbcopy'
+
+alias docker_es='docker exec -it $(docker-compose ps -q elasticsearch) /bin/bash'
+alias docker_worker='docker exec -it $(docker-compose ps -q worker) /bin/bash'
+alias docker_rabbit='docker exec -it $(docker-compose ps -q rabbitmq) /bin/bash'
+alias docker_redis='docker exec -it $(docker-compose ps -q redis) /bin/bash'
+
+
+function de {
+  echo "Choose docker container - type number"
+  command=$(docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Names}}" | tail -n +2 | cat -n)
+  echo $command
+  read line_number
+
+  container_id=$(echo $command | awk "NR==$line_number" | awk '{print $2}')
+  echo "opening container: $container_id"
+  docker exec -it $container_id /bin/bash
+}
+
+function db_test {
+  RAILS_ENV=test bundle exec rake db:drop
+  RAILS_ENV=test bundle exec rake db:create db:schema:load
+}
+
+function db_dev {
+  bundle exec rake db:drop
+  bundle exec rake db:create db:schema:load
+}
+
+# ActiveRecord::Base.logger = Logger.new(STDOUT)
+# ActiveRecord::Base.connection.execute('select * from schema_migrations').map { |r| r['version'] }
+
+function res_spawner {
+  job_runs=$(ps aux | grep -i "delayed_job" | grep -v grep | wc -l)
+  if [[ $job_runs -eq 0 ]]
+  then
+    cd /virtual/app/current && RAILS_ENV=production bin/delayed_job restart
+  fi
+}
+
+# run last command
+function k {
+  command=$(history | grep -v " k$" | tail -1 | awk '{print $2,$3,$4,$5}')
+  echo "executing: $command"
+  eval $command
+}
+
+function cb {
+  branch_name=$(ruby ~/dotfiles/create_name_for_branch.rb $1 $2)
+  echo $branch_name
+  echo $branch_name | tr -d "\n" | clip_copy
+}
+
+function cl {
+  python ~/dotfiles/copy_line.py
+}
+
+function cf {
+  python ~/dotfiles/copy_line.py
+  echo $# | cut -d ':' -f1 | clip_copy
+}
+
+function rts {
+  bundle exec rails routes | grep -i "$1"
+}
+
+function ggf {
+  echo $1
+  echo $2
+  git grep -i --files-with-matches $1 | xargs cat | grep -v $2
+}
+
+function spp {
+  source ~/.public_profile
+}
+
+function ggc {
+  command=$(history | grep " gg " | tail -1 | awk '{print $2,$3,$4,$5,$6,$7,$8,$9}')
+  result=$(eval "$command")
+  if [[ -z $1 ]]
+  then
+    echo 'Put line number'
+  else
+    number=$1
+    line=$(echo $result | awk "\$1 ~ /^$number/" | head -1 | awk '{print $2}' | cut -d ':' -f1-2 | tr -d " \r\n\t")
+    echo $line | tr -d " \r\n\t"
+    echo ""
+    echo $line | tr -d " \r\n\t" | clip_copy
+  fi
+}
+
+function vg {
+  if [[ -z $1 ]]
+  then
+    command=$(history | grep -v " k$" | grep -v "vg$" | tail -1 | awk '{print $2,$3,$4,$5}')
+    result=$(eval "$command")
+  else
+    result=$(git grep -i -n "$@" | tail -n 30)
+  fi
+
+  echo $result | cat -n
+  echo 'File: '
+  read user_command
+
+  action=$(echo $user_command | cut -c1)
+
+  if [[ $action == 'c' ]]
+  then
+    user_command=$(echo $user_command | cut -c2-)
+  else
+    action='e'
+  fi
+
+  line=$(echo $result | awk "NR==$user_command" |  cut -d ':' -f1-2 | tr -d " \n")
+
+  file=$(echo $line | cut -d ':' -f1)
+  line_number=$(echo $line | cut -d ':' -f2)
+
+  echo $file | clip_copy
+  if [[ $action == 'e' ]]
+  then
+    osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
+
+    osascript ~/dotfiles/execute_in_macvim.applescript ":$line_number"
+  fi
+}
+
+# replace_all '*.sass' . "\+transition-timing-function\((.*)\)$" "transition-timing-function: \1"
+# replace_all '*.rb' . '{:order =>\(.*\)}' '-> { order(\1) }'
+function replace_all {
+  files=$(find $2 -name $1  | xargs grep -isl "$3")
+  echo "found files:"
+  echo $files
+  echo $files | xargs sed -i -E -e "s/$3/$4/g"
+}
+function undo_replace_all {
+  find . -name "*-E" | sed 's/-E//g' | while read line ; do cp "$line-E" "$line"; done
+}
+
+function gst {
+  git status --porcelain | cat -n
+  echo 'File: '
+  read user_command
+  action=$(echo $user_command | cut -c1)
+
+  if [[ $action == 'c' ]]
+  then
+    user_command=$(echo $user_command | cut -c2-)
+  elif [[ $action == 'd' ]]
+  then
+    user_command=$(echo $user_command | cut -c2-)
+  else
+    action='e'
+    #user command stays the same
+  fi
+
+  file=$(git status --porcelain | awk "NR==$user_command" | sed 's/ *$//' | sed 's/^ *//' | cut -d ' ' -f2 | tr -d "# \n\t\r")
+  echo $file
+  echo $file | clip_copy
+  if [[ $action == 'e' ]]
+  then
+    osascript ~/dotfiles/execute_in_macvim.applescript ":tab new $file"
+  elif [[ $action == 'd' ]]
+  then
+    git diff $file
+  fi
+}
+
+function gor {
+  if [[ $1 =~ ".+" ]]
+  then
+    branches=$(gbr | grep $1 -c)
+    if [[ $branches == 0 ]]
+    then
+      echo "No branches found"
+    elif [[ $branches > 1 ]]
+    then
+      echo "Choose more specific branch"
+      gbr | grep $1
+    else
+      branch=$(gbr | grep $1 | awk '{print $1}')
+      git checkout $branch
+    fi
+  fi
+}
+
+function cn {
+ curl $1 | cat -n | awk 'NR == n - 1 || NR == n || NR == n + 1' n=$2
+}
+
+export EDITOR=nvim
+
+rc() {
+  DISABLE_SPRING=true bundle exec rails c $@
+}
+
+rg() {
+  bundle exec rails g $@
+}
+
+rs() {
+  if [[ $myos == "OSX" ]]
+  then
+    PGGSSENCMODE="disable" OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec rails s $@
+  else
+    bundle exec rails s $@
+  fi
+}
+
+# for mac apple m5
+rsm() {
+  OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES bundle exec rails s
+}
+
+alias ych="yarn run check"
+
+ys() {
+  yarn run start $1
+}
+yt() {
+  yarn run test $@
+}
+
+alias ytr="yarn run fetch-translations"
+alias yc="yarn cache clean"
+alias yi="yarn install"
+alias yb="NODE_ENV=development yarn run build"
+alias yfix="curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6"
+
+sshs() {
+        ssh $@ "cat > /tmp/.bashrc_temp" < ~/.bashrc_remote
+        ssh -t $@ "bash --rcfile /tmp/.bashrc_temp ; rm /tmp/.bashrc_temp"
+}
+
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)        tar xjf $1        ;;
+            *.tar.gz)         tar xzf $1        ;;
+            *.bz2)            bunzip2 $1        ;;
+            *.rar)            unrar x $1        ;;
+            *.gz)             gunzip $1         ;;
+            *.tar)            tar xf $1         ;;
+            *.tbz2)           tar xjf $1        ;;
+            *.tgz)            tar xzf $1        ;;
+            *.zip)            unzip $1          ;;
+            *.Z)              uncompress $1     ;;
+            *)                echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+ghssh () {
+  gh codespace ssh
+}
+
+export PATH=$PATH:~/.dotnet
+export PATH=$PATH:~/android/android-sdk/sdk/tools
+export PATH=$PATH:~/.local/bin
+
+export PATH="~/.rbenv/bin:$PATH"
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+function show-changelog() {
+  git log --oneline --no-merges $(git describe --tags $(git rev-list --tags --max-count=1))..HEAD
+}
+
+alias fixdbtest="RAILS_ENV=test bundle exec rake db:drop db:create db:migrate"
+alias fixdbdev="RAILS_ENV=development bundle exec rake db:drop db:create db:migrate"
+
+if [[ $myos == "OSX" ]]
+  then
+    export PATH="$(brew --prefix qt)/bin:$PATH"
+  fi
+alias db_fix="RAILS_ENV=test rake db:drop:primary db:drop:secondary db:create:primary db:create:secondary db:migrate:primary db:migrate:secondary"
+alias fs="foreman start"
+
+alias nt="DEBUG_PRINT_LIMIT=30000 npm test"
+alias ntu="DEBUG_PRINT_LIMIT=30000 npm test -- -u"
+alias ne="npm run lint"
+function nef() {
+  if [[ -z $1 ]]
+  then
+    npm run eslint-fix
+  else
+    npm run env -- eslint --fix $1 -c .eslintrc
+  fi
+}
+
+function tags() {
+  ripper-tags -R * `bundle show --paths`
+}
+alias find_by_port="netstat -vanp tcp | grep 3000"
+alias check_ports="sudo lsof -i -P -n | grep LISTEN"
+
+# fixssl="export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/"
+# export LDFLAGS="-L/usr/local/opt/libxml2/lib"
+# export CPPFLAGS="-I/usr/local/opt/libxml2/include"
+# export CPPFLAGS="-I/usr/local/opt/libxml2/include/libxml2"
+# export LDFLAGS="-L/usr/local/opt/libiconv/lib"
+# export CPPFLAGS="-I/usr/local/opt/libiconv/include"
+# export LDFLAGS="-L/usr/local/opt/imagemagick@6/lib"
+# export CPPFLAGS="-I/usr/local/opt/imagemagick@6/include"
+if [[ $myos == "OSX" ]]
+then
+  export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+  export PATH="/usr/local/opt/libiconv/bin:$PATH"
+  export PATH="/usr/local/opt/openssl/bin:$PATH"
+  export PATH="/usr/local/opt/libxml2/bin:$PATH"
+  export PATH="/usr/local/opt/mariadb@10.0/bin:$PATH"
+  export PATH="/usr/local/opt/berkeley-db@4/bin:$PATH"
+fi
+#export PKG_CONFIG_PATH="/usr/local/opt/libxml2/lib/pkgconfig"
+#export PKG_CONFIG_PATH="/usr/local/opt/imagemagick@6/lib/pkgconfig"
+#  gem install nokogiri -v '1.4.4' --source 'https://rubygems.org/' -- --use-system-libraries --with-xml2-include=/usr/local/opt/libxml2/include/libxml2 --with-xml2-lib=/usr/local/opt/libxml2/lib
+#
+#
+if [[ $myos == "Linux" ]]
+then
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Super>h']"
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-2 "['<Super>j']"
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-3 "['<Super>k']"
+  gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-4 "['<Super>l']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Super><Shift>h']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Super><Shift>j']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Super><Shift>k']"
+  gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Super><Shift>l']"
+
+  gnome-extensions disable ding@rastersoft.com # to fix focus issue when switching workspaces
+
+  for i in $(seq 1 9); do gsettings set org.gnome.shell.extensions.dash-to-dock app-hotkey-${i} '[]'; done
+  for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-${i} '[]'; done
+
+  alias swap_alt="setxkbmap -option altwin:swap_lalt_lwin"
+  alias fix_copy="autocutsel -fork & autocutsel PRIMARY -fork &"
+fi
+
+function m {
+  git show-ref --verify --quiet refs/heads/main
+  if [[ $? == 0 ]]
+  then
+    git checkout main
+  else
+    git checkout master
+  fi
+}
+
+set -o vi
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/maks/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+
+
+# xmodmap -pke to check key list - use tab as Hyper_L
+# xmodmap -e "keycode 23 = Hyper_L"
+
+# run kinto - ubuntu to macos keyboard mapper
+# journalctl -f --unit=xkeysnal.service -b &
