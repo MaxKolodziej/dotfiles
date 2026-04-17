@@ -106,40 +106,56 @@ rfixall() {
   command="./node_modules/.bin/prettier --write ."
   echo $command
   eval $command
+
+  command="./node_modules/.bin/herb-lint . --fix"
+  echo $command
+  eval $command
 }
 
 rfix() {
   rb_filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
   erb_filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.erb" | tr '\n' ' ')
-  command="bundle exec rubocop -A $rb_filenames"
-  echo $command
-  eval $command
-
-  if [ -z "${rb_filenames}" ];
+  if [ ! -z "${rb_filenames}" ];
   then
-    command="./node_modules/.bin/prettier --write ."
-  else
-    command="./node_modules/.bin/prettier --write $rb_filenames $erb_filenames"
+    command="bundle exec rubocop -A $rb_filenames"
+    echo $command
+    eval $command
+
+    command="./node_modules/.bin/prettier --write $rb_filenames"
+    echo $command
+    eval $command
   fi
-  echo $command
-  eval $command
+
+  if [ ! -z "${erb_filenames}" ];
+  then
+    command="./node_modules/.bin/herb-lint $erb_filenames --fix"
+    echo $command
+    eval $command
+  fi
 }
 
 rlfix() {
   last_commit=$(git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname:short)' | head -n 1)
-  filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
-  command="bundle exec rubocop -A $filenames"
-  echo $command
-  eval $command
+  rb_filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
+  erb_filenames=$(git diff-tree --no-commit-id --name-only -r $last_commit | grep -v db/schema.rb | grep "\.erb" | tr '\n' ' ')
 
-  if [ -z "${filenames}" ];
+  if [ ! -z "${rb_filenames}" ];
   then
-    command="./node_modules/.bin/prettier --write ."
-  else
-    command="./node_modules/.bin/prettier --write $filenames"
+    command="bundle exec rubocop -A $rb_filenames"
+    echo $command
+    eval $command
+
+    command="./node_modules/.bin/prettier --write $rb_filenames"
+    echo $command
+    eval $command
   fi
-  echo $command
-  eval $command
+
+  if [ ! -z "${erb_filenames}" ];
+  then
+    command="./node_modules/.bin/herb-lint $erb_filenames --fix"
+    echo $command
+    eval $command
+  fi
 }
 
 gcname() {
