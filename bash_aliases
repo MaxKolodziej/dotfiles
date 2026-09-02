@@ -14,6 +14,7 @@ alias gf="git fetch"
 alias gb="git branch"
 alias gd="git diff --no-prefix"
 alias gdc="git diff --cached --no-prefix"
+alias gdm="git diff main..HEAD"
 alias ga="git add"
 alias gA="git add -A"
 alias gpb="git pivotal-branch"
@@ -110,11 +111,15 @@ rfixall() {
   command="./node_modules/.bin/herb-lint . --fix"
   echo $command
   eval $command
+
+  command="herb format --force $erb_filenames"
+  echo $command
+  eval $command
 }
 
 rfix() {
-  rb_filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
-  erb_filenames=$(git diff HEAD --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.erb" | tr '\n' ' ')
+  rb_filenames=$(git diff main --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.rb" | tr '\n' ' ')
+  erb_filenames=$(git diff main --name-only --diff-filter=ACM | grep -v db/schema.rb | grep "\.erb" | tr '\n' ' ')
   if [ ! -z "${rb_filenames}" ];
   then
     command="bundle exec rubocop -A $rb_filenames"
@@ -129,6 +134,10 @@ rfix() {
   if [ ! -z "${erb_filenames}" ];
   then
     command="./node_modules/.bin/herb-lint $erb_filenames --fix"
+    echo $command
+    eval $command
+
+    command="herb format --force $erb_filenames"
     echo $command
     eval $command
   fi
@@ -153,6 +162,10 @@ rlfix() {
   if [ ! -z "${erb_filenames}" ];
   then
     command="./node_modules/.bin/herb-lint $erb_filenames --fix"
+    echo $command
+    eval $command
+
+    command="herb format --force $erb_filenames"
     echo $command
     eval $command
   fi
