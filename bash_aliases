@@ -4,6 +4,7 @@ alias be="bundle exec"
 alias bi="bundle install"
 alias ls='ls -la'
 
+export EDITOR=nvim
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
