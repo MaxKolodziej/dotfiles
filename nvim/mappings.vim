@@ -125,6 +125,7 @@ nnoremap <leader>h ^v$yoputs '----<esc>p$a-----'<esc>
 "map <silent> w <Plug>CamelCaseMotion_w
 nmap ww :w<CR>
 nmap ga :A<CR>
+nmap gv :Tview<CR>
 nmap <c-w> :q<CR>
 "nmap w0 :SetRating 0<CR>
 "nmap w1 :SetRating 20<CR>
