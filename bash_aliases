@@ -187,6 +187,9 @@ migrate() {
 tmigrate() {
   RAILS_ENV=test bundle exec rails db:migrate
 }
+migrate_check() {
+  bundle exec rails db:migrate:reset:primary
+}
 exnum() {
   echo $1 | grep -o -E "[0-9]+"
 }

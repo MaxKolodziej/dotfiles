@@ -267,3 +267,53 @@ inoremap <C-ScrollWheelUp> <Esc>:call AdjustFontSize(1)<CR>a
 inoremap <C-ScrollWheelDown> <Esc>:call AdjustFontSize(-1)<CR>a
 noremap <kPlus> :call AdjustFontSize(1)<CR>
 noremap <kMinus> :call AdjustFontSize(-1)<CR>
+
+function! CopyRubyClassName()
+  let stack = []
+  let lnum = 1
+  let target = line('.')
+
+  while lnum <= target
+    let line = getline(lnum)
+
+    " Remove comments and strings approximately enough for scope detection.
+    let line = substitute(line, '#.*$', '', '')
+
+    " Handle: class Foo / module Foo
+    " Also handles: class Foo::Bar
+    let matches = matchlist(line, '^\s*\(class\|module\)\s\+\([A-Za-z_][A-Za-z0-9_:]*\)')
+
+    if !empty(matches)
+      call add(stack, matches[2])
+    endif
+
+    " Handle Ruby's `class << self` without adding it to the namespace.
+    if line =~ '^\s*class\s*<<'
+      " Nothing to do
+    endif
+
+    " Count `end`s on the line.
+    "
+    " This is intentionally conservative: Ruby's syntax is complicated,
+    " but for normal Rails class/module files this handles the common case.
+    let ends = len(split(line, '\<end\>')) - 1
+
+    while ends > 0 && !empty(stack)
+      call remove(stack, -1)
+      let ends -= 1
+    endwhile
+
+    let lnum += 1
+  endwhile
+
+  let name = join(stack, '::')
+
+  if empty(name)
+    echo 'No Ruby class/module found'
+    return
+  endif
+
+  let @+ = name
+  echo 'Copied: ' . name
+endfunction
+nnoremap cr :call CopyRubyClassName()<cr>
